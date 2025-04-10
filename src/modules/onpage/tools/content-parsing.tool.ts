@@ -16,7 +16,7 @@ export class ContentParsingTool extends BaseTool {
   }
 
   getDescription(): string {
-    return 'Parse and extract content from a webpage';
+    return 'This endpoint allows parsing the content on any page you specify and will return the structured content of the target page, including link URLs, anchors, headings, and textual content.';
   }
 
   getParams(): z.ZodRawShape {
