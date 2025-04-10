@@ -66,7 +66,7 @@ United Kingdom`),
         en`),
       ignore_synonyms: z.boolean().default(true).describe(
           `ignore highly similar keywords, if set to true, results will be more accurate`),
-      limit: z.number().min(1).max(1000).default(100).optional().describe("Maximum number of keywords to return"),
+      limit: z.number().min(1).max(1000).default(10).optional().describe("Maximum number of keywords to return"),
       offset: z.number().min(0).optional().describe(
         `offset in the results array of returned keywords
         optional field

@@ -27,18 +27,27 @@ export class GoogleOrganicLiveAdvancedTool extends BaseTool {
 
   getParams(): z.ZodRawShape {
     return {
-      location_code: z.number().describe("Location code for the search"),
-      language_code: z.string().describe("Language code (e.g., 'en')"),
+      location_name: z.string().describe(`full name of the location
+required field
+in format "City,Region,Country"
+example:
+London,England,United Kingdom`),
+      depth: z.number().min(10).max(700).default(10).describe(`parsing depth
+optional field
+number of results in SERP`),
+      language_code: z.string().describe("search engine language code (e.g., 'en')"),
       keyword: z.string().describe("Search keyword"),
     };
   }
 
-  async handle(params: { location_code: number; language_code: string; keyword: string }): Promise<any> {
+  async handle(params:any): Promise<any> {
     try {
+      console.error(JSON.stringify(params, null, 2));
       const response = await this.dataForSEOClient.makeRequest('/v3/serp/google/organic/live/advanced', 'POST', [{
-        location_code: params.location_code,
+        location_name: params.location_name,
         language_code: params.language_code,
         keyword: params.keyword,
+        depth: params.depth,
       }]) as DataForSEOResponse;
       
       this.validateResponse(response);

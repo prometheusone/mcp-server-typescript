@@ -35,7 +35,7 @@ United Kingdom`),
         required field
         example:
         en`),
-      limit: z.number().min(1).max(1000).default(100).optional().describe("Maximum number of keywords to return"),
+      limit: z.number().min(1).max(1000).default(10).optional().describe("Maximum number of keywords to return"),
       offset: z.number().min(0).optional().describe(
         `offset in the results array of returned keywords
         optional field
