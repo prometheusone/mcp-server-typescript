@@ -3,7 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { DataForSEOConfig } from './config.js';
 import { DataForSEOClient } from './client/dataforseo.client.js';
 import { SerpApiModule } from './modules/serp/serp-api.module.js';
-import { KeywordsDataApi } from './modules/keywords/keywords-data-api.module.js';
+import { KeywordsDataApi } from './modules/keywords-data/keywords-data-api.module.js';
 import { OnPageApi } from './modules/onpage/onpage-api.module.js';
 import { DataForSEOLabsApi } from './modules/dataforseo-labs/dataforseo-labs-api.module.js';
 import { ModuleConfig, ModuleConfigSchema, defaultModuleConfig } from './config/modules.config.js';

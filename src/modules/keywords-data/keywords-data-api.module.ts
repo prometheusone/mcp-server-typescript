@@ -9,7 +9,7 @@ interface ToolDefinition {
   handler: (params: any) => Promise<any>;
 }
 
-export class KeywordsDataApiModule extends BaseModule {
+export class KeywordsDataApi extends BaseModule {
   getTools(): Record<string, ToolDefinition> {
     const tools = [
       new GoogleAdsSearchVolumeTool(this.dataForSEOClient),

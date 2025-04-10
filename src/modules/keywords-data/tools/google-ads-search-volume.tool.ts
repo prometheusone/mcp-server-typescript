@@ -26,16 +26,20 @@ export class GoogleAdsSearchVolumeTool extends BaseTool {
 
   getParams(): z.ZodRawShape {
     return {
-      location_code: z.number().describe("Location code for the search"),
-      language_code: z.string().describe("Language code (e.g., 'en')"),
+      location_name: z.string().default("United States").describe(`full name of the location
+        required field
+        in format "Country"
+        example:
+        United Kingdom`),
+              language_code: z.string().describe("Language code (e.g., 'en')"),
       keywords: z.array(z.string()).describe("Array of keywords to get search volume for"),
     };
   }
 
-  async handle(params: { location_code: number; language_code: string; keywords: string[] }): Promise<any> {
+  async handle(params: any): Promise<any> {
     try {
       const response = await this.dataForSEOClient.makeRequest('/v3/keywords_data/google_ads/search_volume/live', 'POST', [{
-        location_code: params.location_code,
+        location_name: params.location_name,
         language_code: params.language_code,
         keywords: params.keywords,
       }]) as DataForSEOResponse;
