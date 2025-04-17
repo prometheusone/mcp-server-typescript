@@ -16,6 +16,8 @@ interface ToolDefinition {
   handler: (params: any) => Promise<any>;
 }
 
+console.error('Starting DataForSEO MCP Server...');
+
 // Create server instance
 const server = new McpServer({
   name: "dataforseo",
@@ -29,6 +31,7 @@ const dataForSEOConfig: DataForSEOConfig = {
 };
 
 const dataForSEOClient = new DataForSEOClient(dataForSEOConfig);
+console.error('DataForSEO client initialized');
 
 // Parse module configuration from environment
 const moduleConfig: ModuleConfig = ModuleConfigSchema.parse({
@@ -56,6 +59,7 @@ if (moduleConfig.onpage) {
 if (moduleConfig.dataforseo_labs) {
   modules.push(new DataForSEOLabsApi(dataForSEOClient));
 }
+console.error('Modules initialized');
 
 // Register tools from modules
 function registerModuleTools() {
@@ -76,10 +80,12 @@ function registerModuleTools() {
 
 // Register all tools
 registerModuleTools();
+console.error('Tools registered');
 
 // Start the server
 async function main() {
-  const transport = new StdioServerTransport();
+  const transport = new StdioServerTransport(); 
+  console.error('Starting server');
   await server.connect(transport);
   console.error("DataForSEO MCP Server running on stdio");
 }
