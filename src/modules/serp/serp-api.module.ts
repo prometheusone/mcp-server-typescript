@@ -1,8 +1,7 @@
 import { BaseModule } from '../base.module.js';
-import { GoogleOrganicLiveAdvancedTool } from './tools/google-organic-live-advanced.tool.js';
-import { DataForSEOClient } from '../../client/dataforseo.client.js';
 import { z } from 'zod';
-
+import { SerpOrganicLiveAdvancedTool } from './tools/serp-organic-live-advanced.tool.js';
+import { SerpOrganicLocationsListTool } from './tools/serp-organic-locations-list.tool.js';
 interface ToolDefinition {
   description: string;
   params: z.ZodRawShape;
@@ -12,7 +11,8 @@ interface ToolDefinition {
 export class SerpApiModule extends BaseModule {
   getTools(): Record<string, ToolDefinition> {
     const tools = [
-      new GoogleOrganicLiveAdvancedTool(this.dataForSEOClient),
+      new SerpOrganicLiveAdvancedTool(this.dataForSEOClient),
+      new SerpOrganicLocationsListTool(this.dataForSEOClient),
       // Add more tools here
     ];
 

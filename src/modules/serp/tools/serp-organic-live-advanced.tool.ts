@@ -3,7 +3,7 @@ import { BaseTool } from '../../base.tool.js';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
 import { DataForSEOResponse } from '../../base.tool.js';
 
-export class GoogleOrganicLiveAdvancedTool extends BaseTool {
+export class SerpOrganicLiveAdvancedTool extends BaseTool {
   constructor(dataForSEOClient: DataForSEOClient) {
     super(dataForSEOClient);
     this.fields = [
@@ -18,16 +18,17 @@ export class GoogleOrganicLiveAdvancedTool extends BaseTool {
   }
 
   getName(): string {
-    return 'serp-google-organic-live-advanced';
+    return 'serp-organic-live-advanced';
   }
 
   getDescription(): string {
-    return 'Get Google organic search results for a keyword';
+    return 'Get organic search results for a keyword in specified search engine';
   }
 
   getParams(): z.ZodRawShape {
     return {
-      location_name: z.string().describe(`full name of the location
+      search_engine: z.string().default('google').describe("search engine name, one of: google, yahoo, bing."),
+      location_name: z.string().default('United States').describe(`full name of the location
 required field
 Location format - hierarchical, comma-separated (from most specific to least)
  Can be one of:
@@ -45,7 +46,7 @@ number of results in SERP`),
   async handle(params:any): Promise<any> {
     try {
       console.error(JSON.stringify(params, null, 2));
-      const response = await this.dataForSEOClient.makeRequest('/v3/serp/google/organic/live/advanced', 'POST', [{
+      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/${params.search_engine}/organic/live/advanced`, 'POST', [{
         location_name: params.location_name,
         language_code: params.language_code,
         keyword: params.keyword,
