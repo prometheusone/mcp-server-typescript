@@ -1,17 +1,27 @@
 import { z } from 'zod';
 
-export const ModuleConfigSchema = z.object({
-  serp: z.boolean().default(true).describe("Enable SERP API module"),
-  keywords: z.boolean().default(true).describe("Enable Keywords Data API module"),
-  onpage: z.boolean().default(true).describe("Enable OnPage API module"),
-  dataforseo_labs: z.boolean().default(true),
-});
+// Define available module names
+export const AVAILABLE_MODULES = ['SERP', 'KEYWORDS_DATA', 'ONPAGE', 'DATAFORSEO_LABS'] as const;
+export type ModuleName = typeof AVAILABLE_MODULES[number];
 
-export type ModuleConfig = z.infer<typeof ModuleConfigSchema>;
+// Schema for validating the ENABLED_MODULES environment variable
+export const EnabledModulesSchema = z.string()
+  .transform((val) => {
+    if (!val) return AVAILABLE_MODULES; // If not set, enable all modules
+    return val.split(',').map(name => name.trim().toUpperCase() as ModuleName);
+  })
+  .refine((modules) => {
+    return modules.every(module => AVAILABLE_MODULES.includes(module));
+  }, {
+    message: `Invalid module name. Available modules are: ${AVAILABLE_MODULES.join(', ')}`
+  });
 
-export const defaultModuleConfig: ModuleConfig = {
-  serp: true,
-  keywords: true,
-  onpage: true,
-  dataforseo_labs: true,
-}; 
+export type EnabledModules = z.infer<typeof EnabledModulesSchema>;
+
+// Helper function to check if a module is enabled
+export function isModuleEnabled(moduleName: ModuleName, enabledModules: EnabledModules): boolean {
+  return enabledModules.includes(moduleName);
+}
+
+// Default configuration (all modules enabled)
+export const defaultEnabledModules: EnabledModules = AVAILABLE_MODULES; 

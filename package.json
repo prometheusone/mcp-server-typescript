@@ -5,7 +5,7 @@
   "type": "module",
   "bin": {
     "main": "./build/index.js",
-    "test": "./build/indextest.js"
+    "test": "./build/test.js"
   },
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\""

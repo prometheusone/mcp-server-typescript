@@ -1,5 +1,3 @@
-import { DataForSEOConfig } from '../config.js';
-
 export class DataForSEOClient {
   private config: DataForSEOConfig;
   private authHeader: string;
@@ -31,3 +29,9 @@ export class DataForSEOClient {
     return response.json();
   }
 } 
+
+export interface DataForSEOConfig {
+  username: string;
+  password: string;
+  baseUrl?: string;
+}
