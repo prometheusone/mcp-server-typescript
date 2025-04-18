@@ -29,9 +29,11 @@ export class GoogleOrganicLiveAdvancedTool extends BaseTool {
     return {
       location_name: z.string().describe(`full name of the location
 required field
-in format "City,Region,Country"
-example:
-London,England,United Kingdom`),
+Location format - hierarchical, comma-separated (from most specific to least)
+ Can be one of:
+ 1. Country only: "United States"
+ 2. Region,Country: "California,United States"
+ 3. City,Region,Country: "San Francisco,California,United States"`),
       depth: z.number().min(10).max(700).default(10).describe(`parsing depth
 optional field
 number of results in SERP`),
