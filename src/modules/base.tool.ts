@@ -62,10 +62,6 @@ export abstract class BaseTool {
       throw new Error(`API Error: ${response.status_message} (Code: ${response.status_code})`);
     }
 
-    if (response.tasks_error > 0) {
-      throw new Error(`Tasks Error: ${response.tasks_error} tasks failed`);
-    }
-
     if (response.tasks.length === 0) {
       throw new Error('No tasks in response');
     }
@@ -73,6 +69,10 @@ export abstract class BaseTool {
     const task = response.tasks[0];
     if (task.status_code / 100 !== 200) {
       throw new Error(`Task Error: ${task.status_message} (Code: ${task.status_code})`);
+    }
+
+    if (response.tasks_error > 0) {
+      throw new Error(`Tasks Error: ${response.tasks_error} tasks failed`);
     }
   }
 

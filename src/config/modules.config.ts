@@ -5,10 +5,10 @@ export const AVAILABLE_MODULES = ['SERP', 'KEYWORDS_DATA', 'ONPAGE', 'DATAFORSEO
 export type ModuleName = typeof AVAILABLE_MODULES[number];
 
 // Schema for validating the ENABLED_MODULES environment variable
-export const EnabledModulesSchema = z.string()
-  .transform((val) => {
+export const EnabledModulesSchema = z.any()
+  .transform((val:string) => {
     if (!val) return AVAILABLE_MODULES; // If not set, enable all modules
-    return val.split(',').map(name => name.trim().toUpperCase() as ModuleName);
+    return val.toString().split(',').map(name => name.trim().toUpperCase() as ModuleName);
   })
   .refine((modules) => {
     return modules.every(module => AVAILABLE_MODULES.includes(module));
