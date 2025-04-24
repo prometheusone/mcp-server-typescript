@@ -1,18 +1,18 @@
 # DataForSEO MCP Server
 
-A Model Context Protocol (MCP) server implementation that provides access to DataForSEO's API services through a standardized interface. This server enables AI models to interact with DataForSEO's powerful SEO and marketing data tools.
+Model Context Protocol (MCP) server implementation for DataForSEO, enabling Claude to interact with selected DataForSEO APIs and obtain SEO data through a standardized interface. 
 
 ## Features
 
-- SERP API: Search Engine Results Page data
-- KEYWORDS_DATA API: Keyword research and analysis
-- ONPAGE API: Website optimization insights
-- DATAFORSEO_LABS API: Advanced SEO research tools
+- SERP API: real-time Search Engine Results Page (SERP) data for Google, Bing, and Yahoo;
+- KEYWORDS_DATA API: keyword research and clickstream data, including search volume, cost-per-click, and other metrics;   
+- ONPAGE API: allows crawling websites and webpages according to customizable parameters to obtain on-page SEO performance metrics; 
+- DATAFORSEO_LABS API: data on keywords, SERPs, and domains based on DataForSEO's in-house databases and proprietary algorithms.
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
-- DataForSEO API credentials (username and password)
+- DataForSEO API credentials (API login and password)
 
 ## Installation
 
@@ -33,7 +33,7 @@ npm install
 export DATAFORSEO_USERNAME=your_username
 export DATAFORSEO_PASSWORD=your_password
 
-# Optional - Specify which modules to enable (comma-separated)
+# Optional: specify which modules to enable (comma-separated)
 # If not set, all modules will be enabled
 export ENABLED_MODULES="SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS"
 ```
@@ -54,20 +54,20 @@ node build/index.js
 
 The following modules are available to be enabled/disabled:
 
-- `SERP`: Search Engine Results Page data
-- `KEYWORDS_DATA`: Keyword research and analysis
-- `ONPAGE`: Website optimization insights
-- `DATAFORSEO_LABS`: Advanced SEO research tools
+- `SERP`: real-time SERP data for Google, Bing, and Yahoo;
+- `KEYWORDS_DATA`: keyword research and clickstream data;
+- `ONPAGE`: crawl websites and webpages to obtain on-page SEO performance metrics;
+- `DATAFORSEO_LABS`: data on keywords, SERPs, and domains based on DataForSEO's databases and algorithms.
 
 ## Adding New Tools/Modules
 
 ### Module Structure
 
 Each module corresponds to a specific DataForSEO API:
-- `SERP` module → [SERP API](https://docs.dataforseo.com/v3/serp/)
-- `KEYWORDS_DATA` module → [Keywords Data API](https://docs.dataforseo.com/v3/keywords_data/)
-- `ONPAGE` module → [OnPage API](https://docs.dataforseo.com/v3/on_page/)
-- `DATAFORSEO_LABS` module → [DataForSEO Labs API](https://docs.dataforseo.com/v3/dataforseo_labs/)
+- `SERP` module → [SERP API](https://docs.dataforseo.com/v3/serp/overview/)
+- `KEYWORDS_DATA` module → [Keywords Data API](https://docs.dataforseo.com/v3/keywords_data/overview/)
+- `ONPAGE` module → [OnPage API](https://docs.dataforseo.com/v3/on_page/overview/)
+- `DATAFORSEO_LABS` module → [DataForSEO Labs API](https://docs.dataforseo.com/v3/dataforseo_labs/overview)
 
 ### Implementation Options
 
@@ -77,7 +77,7 @@ You can either:
 
 ### Adding a New Tool
 
-Here's how to add a new tool to any module (new or existing):
+Here's how to add a new tool to any new or pre-existing module:
 
 ```typescript
 // src/modules/your-module/tools/your-tool.tool.ts
@@ -136,7 +136,7 @@ export class YourTool extends BaseTool {
       // Validate the response for errors
       this.validateResponse(response);
 
-      //if the main data array specified in tasks[0].result[:] field
+      //if the main data array is specified in tasks[0].result[:] field
       const result = this.handleDirectResult(response);
       //if main data array specified in tasks[0].result[0].items field
       const result = this.handleItemsResult(response);
@@ -195,17 +195,17 @@ if (isModuleEnabled('YOUR_MODULE_NAME', enabledModules)) {
 }
 ```
 
-## What endpoints/APIs you want to support next?
+## What endpoints/APIs do you want us to support next?
 
 We're always looking to expand the capabilities of this MCP server. If you have specific DataForSEO endpoints or APIs you'd like to see supported, please:
 
 1. Check the [DataForSEO API Documentation](https://docs.dataforseo.com/v3/) to see what's available
 2. Open an issue in our GitHub repository with:
-   - The API/endpoint you'd like to see supported
-   - A brief description of its use case
-   - Any specific features you'd like to see implemented
+   - The API/endpoint you'd like to see supported;
+   - A brief description of your use case;
+   - Describe any specific features you'd like to see implemented.
 
-Your input helps us prioritize which APIs to support next!
+Your feedback helps us prioritize which APIs to support next!
 
 ## Resources
 
