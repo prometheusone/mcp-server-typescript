@@ -14,6 +14,7 @@ export class DataForSEOClient {
     const headers = {
       'Authorization': this.authHeader,
       'Content-Type': 'application/json',
+      'User-Agent': 'DataForSEO-MCP-TypeScript-SDK/1.0.0'
     };
 
     const response = await fetch(url, {
