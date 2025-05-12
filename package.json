@@ -1,20 +1,20 @@
 {
   "name": "dataforseo-mcp-server",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "main": "build/index.js",
   "type": "module",
   "bin": {
     "test": "./build/test.js",
-    "dataforseo-mcp-server": "./build/index.js"
+    "dataforseo-mcp-server": "build/index.js"
   },
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "start": "node build/index.js",
     "dev": "tsc --watch",
-    "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
     "postinstall": "node -e \"try { require('fs').chmodSync('build/index.js', '755'); } catch(e) {}\""
   },
-  "files": [
+    "files": [
     "build"
   ],
   "keywords": [ "dataforseo", "mcp", "modelcontextprotocol", "api", "server", "seo" ],
