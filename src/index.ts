@@ -44,15 +44,12 @@ const modules: BaseModule[] = [];
 if (isModuleEnabled('SERP', enabledModules)) {
   modules.push(new SerpApiModule(dataForSEOClient));
 }
-
 if (isModuleEnabled('KEYWORDS_DATA', enabledModules)) {
   modules.push(new KeywordsDataApiModule(dataForSEOClient));
 }
-
 if (isModuleEnabled('ONPAGE', enabledModules)) {
   modules.push(new OnPageApiModule(dataForSEOClient));
 }
-
 if (isModuleEnabled('DATAFORSEO_LABS', enabledModules)) {
   modules.push(new DataForSEOLabsApi(dataForSEOClient));
 }

@@ -36,6 +36,11 @@ export DATAFORSEO_PASSWORD=your_password
 # Optional: specify which modules to enable (comma-separated)
 # If not set, all modules will be enabled
 export ENABLED_MODULES="SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS,BACKLINKS,BUSINESS_DATA,DOMAIN_ANALYTICS"
+
+# Optional: enable full API responses
+# If not set or set to false, the server will filter and transform API responses to a more concise format
+# If set to true, the server will return the full, unmodified API responses
+export DATAFORSEO_FULL_RESPONSE="false"
 ```
 
 ## Building and Running

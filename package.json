@@ -1,10 +1,10 @@
 {
-  "name": "dataforseo-mcp-server-ts",
-  "version": "1.0.0",
+  "name": "dataforseo-mcp-server",
+  "version": "1.0.1",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "main": "./build/index.js",
+    "start": "./build/index.js",
     "test": "./build/test.js"
   },
   "scripts": {
@@ -13,10 +13,15 @@
   "files": [
     "build"
   ],
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [ "dataforseo", "mcp", "modelcontextprotocol", "api", "server", "seo" ],
+  "author": "dataforseo",
+  "license": "Apache-2.0",
+  "description": "A Model Context Protocol (MCP) server for the DataForSEO API, enabling modular and extensible integration of DataForSEO endpoints.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dataforseo/mcp-server-typescript.git"
+  },
+  "homepage": "https://github.com/dataforseo/mcp-server-typescript#readme",  
   "devDependencies": {
     "@types/node": "^22.10.0",
     "typescript": "^5.7.2"

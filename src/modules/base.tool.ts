@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../client/dataforseo.client.js';
 import { filterFields, parseFieldPaths } from '../utils/field-filter.js';
+import { defaultGlobalToolConfig } from '../config/global.tool.js';
 
 export interface DataForSEOResponse {
   version: string;
@@ -77,6 +78,9 @@ export abstract class BaseTool {
   }
 
   protected handleItemsResult(result: any[]): any[] {
+    if (defaultGlobalToolConfig.fullResponse) {
+      return result;
+    }
     if (!result[0]?.items) {
       return this.filterResponseFields(result,this.fields);
     }
@@ -89,6 +93,9 @@ export abstract class BaseTool {
   }
 
   protected handleDirectResult(result: any[]): any[] {    
+    if (defaultGlobalToolConfig.fullResponse) {
+      return result;
+    }
     return result.map((item: any)=> {
       return this.filterResponseFields(item,this.fields);
     })
