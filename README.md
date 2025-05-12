@@ -43,6 +43,31 @@ export ENABLED_MODULES="SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS,BACKLINKS,BUSI
 export DATAFORSEO_FULL_RESPONSE="false"
 ```
 
+## Installation as an NPM Package
+
+You can install the package globally:
+
+```bash
+npm install -g dataforseo-mcp-server
+```
+
+Or run it directly without installation:
+
+```bash
+npx dataforseo-mcp-server
+```
+
+Remember to set environment variables before running the command:
+
+```bash
+# Required environment variables
+export DATAFORSEO_USERNAME=your_username
+export DATAFORSEO_PASSWORD=your_password
+
+# Run with npx
+npx dataforseo-mcp-server
+```
+
 ## Building and Running
 
 Build the project:
@@ -52,7 +77,7 @@ npm run build
 
 Run the server:
 ```bash
-node build/index.js
+npm start
 ```
 
 ## Available Modules

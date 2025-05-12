@@ -1,14 +1,18 @@
 {
   "name": "dataforseo-mcp-server",
-  "version": "1.0.1",
-  "main": "index.js",
+  "version": "1.0.2",
+  "main": "build/index.js",
   "type": "module",
   "bin": {
-    "start": "./build/index.js",
-    "test": "./build/test.js"
+    "test": "./build/test.js",
+    "dataforseo-mcp-server": "./build/index.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\""
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "start": "node build/index.js",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "postinstall": "node -e \"try { require('fs').chmodSync('build/index.js', '755'); } catch(e) {}\""
   },
   "files": [
     "build"
@@ -22,6 +26,9 @@
     "url": "git+https://github.com/dataforseo/mcp-server-typescript.git"
   },
   "homepage": "https://github.com/dataforseo/mcp-server-typescript#readme",  
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devDependencies": {
     "@types/node": "^22.10.0",
     "typescript": "^5.7.2"
