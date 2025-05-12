@@ -1,10 +1,10 @@
 import { BaseModule, ToolDefinition } from '../base.module.js';
-import { GoogleAdsSearchVolumeTool } from './tools/google-ads-search-volume.tool.js';
+import { BusinessDataBusinessListingsSearchTool } from './listings/business-listings-search.tool.js';
 
-export class KeywordsDataApiModule extends BaseModule {
+export class BusinessDataApiModule extends BaseModule {
   getTools(): Record<string, ToolDefinition> {
     const tools = [
-      new GoogleAdsSearchVolumeTool(this.dataForSEOClient),
+      new BusinessDataBusinessListingsSearchTool(this.dataForSEOClient),
       // Add more tools here
     ];
 

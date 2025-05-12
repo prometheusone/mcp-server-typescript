@@ -2,12 +2,15 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { DataForSEOClient, DataForSEOConfig } from './client/dataforseo.client.js';
 import { SerpApiModule } from './modules/serp/serp-api.module.js';
-import { KeywordsDataApi } from './modules/keywords-data/keywords-data-api.module.js';
-import { OnPageApi } from './modules/onpage/onpage-api.module.js';
+import { KeywordsDataApiModule } from './modules/keywords-data/keywords-data-api.module.js';
+import { OnPageApiModule } from './modules/onpage/onpage-api.module.js';
 import { DataForSEOLabsApi } from './modules/dataforseo-labs/dataforseo-labs-api.module.js';
 import { EnabledModulesSchema, isModuleEnabled, defaultEnabledModules } from './config/modules.config.js';
 import { BaseModule } from './modules/base.module.js';
 import { z } from 'zod';
+import { BacklinksApiModule } from "./modules/backlinks/backlinks-api.module.js";7
+import { BusinessDataApiModule } from "./modules/business-data-api/business-data-api.module.js";
+import { DomainAnalyticsApiModule } from "./modules/domain_analytics/domain-analytics-api.module.js";
 
 interface ToolDefinition {
   description: string;
@@ -43,15 +46,24 @@ if (isModuleEnabled('SERP', enabledModules)) {
 }
 
 if (isModuleEnabled('KEYWORDS_DATA', enabledModules)) {
-  modules.push(new KeywordsDataApi(dataForSEOClient));
+  modules.push(new KeywordsDataApiModule(dataForSEOClient));
 }
 
 if (isModuleEnabled('ONPAGE', enabledModules)) {
-  modules.push(new OnPageApi(dataForSEOClient));
+  modules.push(new OnPageApiModule(dataForSEOClient));
 }
 
 if (isModuleEnabled('DATAFORSEO_LABS', enabledModules)) {
   modules.push(new DataForSEOLabsApi(dataForSEOClient));
+}
+if (isModuleEnabled('BACKLINKS', enabledModules)) {
+  modules.push(new BacklinksApiModule(dataForSEOClient));
+}
+if (isModuleEnabled('BUSINESS_DATA', enabledModules)) {
+  modules.push(new BusinessDataApiModule(dataForSEOClient));
+}
+if (isModuleEnabled('DOMAIN_ANALYTICS', enabledModules)) {
+  modules.push(new DomainAnalyticsApiModule(dataForSEOClient));
 }
 console.error('Modules initialized');
 

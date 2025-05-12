@@ -35,7 +35,7 @@ export DATAFORSEO_PASSWORD=your_password
 
 # Optional: specify which modules to enable (comma-separated)
 # If not set, all modules will be enabled
-export ENABLED_MODULES="SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS"
+export ENABLED_MODULES="SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS,BACKLINKS,BUSINESS_DATA,DOMAIN_ANALYTICS"
 ```
 
 ## Building and Running
@@ -57,17 +57,23 @@ The following modules are available to be enabled/disabled:
 - `SERP`: real-time SERP data for Google, Bing, and Yahoo;
 - `KEYWORDS_DATA`: keyword research and clickstream data;
 - `ONPAGE`: crawl websites and webpages to obtain on-page SEO performance metrics;
-- `DATAFORSEO_LABS`: data on keywords, SERPs, and domains based on DataForSEO's databases and algorithms.
+- `DATAFORSEO_LABS`: data on keywords, SERPs, and domains based on DataForSEO's databases and algorithms;
+- `BACKLINKS`: data on inbound links, referring domains and referring pages for any domain, subdomain, or webpage;
+- `BUSINESS_DATA`: based on business reviews and business information publicly shared on the following platforms: Google, Trustpilot, Tripadvisor;
+- `DOMAIN_ANALYTICS`: helps identify all possible technologies used for building websites and offers Whois data;
 
 ## Adding New Tools/Modules
 
 ### Module Structure
 
 Each module corresponds to a specific DataForSEO API:
-- `SERP` module → [SERP API](https://docs.dataforseo.com/v3/serp/overview/)
-- `KEYWORDS_DATA` module → [Keywords Data API](https://docs.dataforseo.com/v3/keywords_data/overview/)
-- `ONPAGE` module → [OnPage API](https://docs.dataforseo.com/v3/on_page/overview/)
+- `SERP` module → [SERP API](https://docs.dataforseo.com/v3/serp/overview)
+- `KEYWORDS_DATA` module → [Keywords Data API](https://docs.dataforseo.com/v3/keywords_data/overview)
+- `ONPAGE` module → [OnPage API](https://docs.dataforseo.com/v3/on_page/overview)
 - `DATAFORSEO_LABS` module → [DataForSEO Labs API](https://docs.dataforseo.com/v3/dataforseo_labs/overview)
+- `BACKLINKS`: module → [Backlinks API](https://docs.dataforseo.com/v3/backlinks/overview)
+- `BUSINESS_DATA`: module → [Business Data API](https://docs.dataforseo.com/v3/business_data/overview)
+- `DOMAIN_ANALYTICS`: module → [Domain Analytics API](https://docs.dataforseo.com/v3/domain_analytics/overview)
 
 ### Implementation Options
 
@@ -211,4 +217,3 @@ Your feedback helps us prioritize which APIs to support next!
 
 - [Model Context Protocol Documentation](https://modelcontextprotocol.io/quickstart)
 - [DataForSEO API Documentation](https://docs.dataforseo.com/)
-

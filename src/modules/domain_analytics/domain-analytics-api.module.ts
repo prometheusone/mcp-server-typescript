@@ -1,10 +1,12 @@
 import { BaseModule, ToolDefinition } from '../base.module.js';
-import { GoogleAdsSearchVolumeTool } from './tools/google-ads-search-volume.tool.js';
+import { DomainTechnologiesTool } from './technologies/domain-technologies.tool.js';
+import { WhoisOverviewTool } from './whois/whois-overview.tool.js';
 
-export class KeywordsDataApiModule extends BaseModule {
+export class DomainAnalyticsApiModule extends BaseModule {
   getTools(): Record<string, ToolDefinition> {
     const tools = [
-      new GoogleAdsSearchVolumeTool(this.dataForSEOClient),
+      new WhoisOverviewTool(this.dataForSEOClient),
+      new DomainTechnologiesTool(this.dataForSEOClient),
       // Add more tools here
     ];
 
