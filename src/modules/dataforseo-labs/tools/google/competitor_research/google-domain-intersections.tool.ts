@@ -100,7 +100,7 @@ United Kingdom`),
 
   async handle(params: any): Promise<any> {
     try {
-      const response = await this.client.makeRequest('/v3/dataforseo_labs/google/competitors_domain/live', 'POST', [{
+      const response = await this.client.makeRequest('/v3/dataforseo_labs/google/domain_intersection/live', 'POST', [{
         target1: params.target1,
         target2: params.target2,
         location_name: params.location_name,

@@ -51,14 +51,10 @@ United Kingdom`),
 
   async handle(params: any): Promise<any> {
     try {
-      const response = await this.client.makeRequest('/v3/dataforseo_labs/google/ranked_keywords/live', 'POST', [{
-        target: params.target,
+      const response = await this.client.makeRequest('/v3/dataforseo_labs/google/keyword_overview/live', 'POST', [{
+        keywords: params.keywords,
         location_name: params.location_name,
-        language_code: params.language_code,
-        limit: params.limit,
-        offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by
+        language_code: params.language_code
       }]) as DataForSEOResponse;
       console.error(JSON.stringify(response));
       this.validateResponse(response);
