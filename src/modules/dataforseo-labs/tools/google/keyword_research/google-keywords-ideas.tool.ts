@@ -91,7 +91,7 @@ United Kingdom`),
   async handle(params: any): Promise<any> {
     try {
       const response = await this.client.makeRequest('/v3/dataforseo_labs/google/keyword_ideas/live', 'POST', [{
-        keyword: params.keyword,
+        keywords: [params.keyword],
         location_name: params.location_name,
         language_code: params.language_code,
         limit: params.limit,
