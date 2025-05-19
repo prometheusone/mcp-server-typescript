@@ -184,26 +184,26 @@ async function main() {
       console.error(Date.now().toLocaleString())
       
       // Check if we have valid credentials
-      if (!req.username && !req.password) {
-        // If no request auth, check environment variables
-        const envUsername = process.env.DATAFORSEO_USERNAME;
-        const envPassword = process.env.DATAFORSEO_PASSWORD;
+      // if (!req.username && !req.password) {
+      //   // If no request auth, check environment variables
+      //   const envUsername = process.env.DATAFORSEO_USERNAME;
+      //   const envPassword = process.env.DATAFORSEO_PASSWORD;
         
-        if (!envUsername || !envPassword) {
-          res.status(401).json({
-            jsonrpc: "2.0",
-            error: {
-              code: -32001,
-              message: "Authentication required. Provide DataForSEO credentials."
-            },
-            id: null
-          });
-          return;
-        }
-        // Use environment variables
-        req.username = envUsername;
-        req.password = envPassword;
-      }
+      //   if (!envUsername || !envPassword) {
+      //     res.status(401).json({
+      //       jsonrpc: "2.0",
+      //       error: {
+      //         code: -32001,
+      //         message: "Authentication required. Provide DataForSEO credentials."
+      //       },
+      //       id: null
+      //     });
+      //     return;
+      //   }
+      //   // Use environment variables
+      //   req.username = envUsername;
+      //   req.password = envPassword;
+      // }
       
       const server = getServer(req.username, req.password); 
       console.error(Date.now().toLocaleString())
