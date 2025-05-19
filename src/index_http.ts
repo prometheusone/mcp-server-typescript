@@ -139,38 +139,38 @@ async function main() {
     // Check for Authorization header
     const authHeader = req.headers.authorization;
     console.error(authHeader)
-    if (!authHeader || !authHeader.startsWith('Basic ')) {
-      res.status(401).json({
-        jsonrpc: "2.0",
-        error: {
-          code: -32001,
-          message: "Authentication required"
-        },
-        id: null
-      });
-      return;
-    }
+    // if (!authHeader || !authHeader.startsWith('Basic ')) {
+    //   res.status(401).json({
+    //     jsonrpc: "2.0",
+    //     error: {
+    //       code: -32001,
+    //       message: "Authentication required"
+    //     },
+    //     id: null
+    //   });
+    //   return;
+    // }
 
-    // Extract credentials
-    const base64Credentials = authHeader.split(' ')[1];
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
-    const [username, password] = credentials.split(':');
+    // // Extract credentials
+    // const base64Credentials = authHeader.split(' ')[1];
+    // const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+    // const [username, password] = credentials.split(':');
 
-    if (!username || !password) {
-      res.status(401).json({
-        jsonrpc: "2.0",
-        error: {
-          code: -32001, 
-          message: "Invalid credentials"
-        },
-        id: null
-      });
-      return;
-    }
+    // if (!username || !password) {
+    //   res.status(401).json({
+    //     jsonrpc: "2.0",
+    //     error: {
+    //       code: -32001, 
+    //       message: "Invalid credentials"
+    //     },
+    //     id: null
+    //   });
+    //   return;
+    // }
 
-    // Add credentials to request
-    req.username = username;
-    req.password = password;
+    // // Add credentials to request
+    // req.username = username;
+    // req.password = password;
     next();
   };
 
