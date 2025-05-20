@@ -8,7 +8,7 @@ import { DataForSEOLabsApi } from './modules/dataforseo-labs/dataforseo-labs-api
 import { EnabledModulesSchema, isModuleEnabled, defaultEnabledModules } from './config/modules.config.js';
 import { BaseModule, ToolDefinition } from './modules/base.module.js';
 import { z } from 'zod';
-import { BacklinksApiModule } from "./modules/backlinks/backlinks-api.module.js";7
+import { BacklinksApiModule } from "./modules/backlinks/backlinks-api.module.js";
 import { BusinessDataApiModule } from "./modules/business-data-api/business-data-api.module.js";
 import { DomainAnalyticsApiModule } from "./modules/domain_analytics/domain-analytics-api.module.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
