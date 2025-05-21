@@ -51,7 +51,7 @@ example:
 
 [["1.first_seen",">","2017-10-23 11:31:45 +00:00"],
 "and",
-[["1.acnhor","like","%seo%"],"or",["1.text_pre","not_like","%seo%"]]]`
+[["1.anchor","like","%seo%"],"or",["1.text_pre","not_like","%seo%"]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
