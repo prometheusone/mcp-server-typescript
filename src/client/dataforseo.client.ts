@@ -11,10 +11,13 @@ export class DataForSEOClient {
   async makeRequest<T>(endpoint: string, method: string = 'POST', body?: any): Promise<T> {
     const url = `${this.config.baseUrl || "https://api.dataforseo.com"}${endpoint}`;
     
+    // Import version dynamically to avoid circular dependencies
+    const { version } = await import('../utils/version.js');
+    
     const headers = {
       'Authorization': this.authHeader,
       'Content-Type': 'application/json',
-      'User-Agent': 'DataForSEO-MCP-TypeScript-SDK/1.0.6'
+      'User-Agent': `DataForSEO-MCP-TypeScript-SDK/${version}`
     };
 
     const response = await fetch(url, {
