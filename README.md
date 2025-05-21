@@ -84,6 +84,11 @@ npm start
 
 The server runs on port 3000 by default and supports both Basic Authentication and environment variable-based authentication.
 
+To start the HTTP server, run:
+```bash
+npm run http
+```
+
 ### Authentication Methods
 
 1. **Basic Authentication**
