@@ -77,7 +77,11 @@ npm run build
 
 Run the server:
 ```bash
-npm start
+# Start local server (direct MCP communication)
+npx dataforseo-mcp-server
+
+# Start HTTP server
+npx dataforseo-mcp-server http
 ```
 
 ## HTTP Server Configuration
