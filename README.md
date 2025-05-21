@@ -80,6 +80,26 @@ Run the server:
 npm start
 ```
 
+## HTTP Server Configuration
+
+The server runs on port 3000 by default and supports both Basic Authentication and environment variable-based authentication.
+
+### Authentication Methods
+
+1. **Basic Authentication**
+   - Send requests with Basic Auth header:
+   ```
+   Authorization: Basic <base64-encoded-credentials>
+   ```
+   - Credentials format: `username:password`
+
+2. **Environment Variables**
+   - If no Basic Auth is provided, the server will use credentials from environment variables:
+   ```bash
+   export DATAFORSEO_USERNAME=your_username
+   export DATAFORSEO_PASSWORD=your_password
+   ```
+   
 ## Available Modules
 
 The following modules are available to be enabled/disabled:
