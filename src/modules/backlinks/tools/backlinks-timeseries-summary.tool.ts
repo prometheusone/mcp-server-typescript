@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksTimeseriesSummaryTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
@@ -8,7 +8,7 @@ export class BacklinksTimeseriesSummaryTool extends BaseTool {
   }
 
   getName(): string {
-    return 'backlinks_timeseries_summary_tool';
+    return 'backlinks_timeseries_summary';
   }
 
   getDescription(): string {
@@ -63,11 +63,8 @@ if there is no data for a certain day/week/month/year, we will return 0`).defaul
         date_from: params.date_from,
         date_to: params.date_to,
         group_range: params.group_range
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

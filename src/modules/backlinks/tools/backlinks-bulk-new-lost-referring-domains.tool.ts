@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksBulkNewLostReferringDomainsTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
@@ -8,7 +8,7 @@ export class BacklinksBulkNewLostReferringDomainsTool extends BaseTool {
   }
 
   getName(): string {
-    return 'backlinks_bulk_new_lost_referring_domains_tool';
+    return 'backlinks_bulk_new_lost_referring_domains';
   }
 
   getDescription(): string {
@@ -56,11 +56,8 @@ example:
     try {
       const response = await this.client.makeRequest('/v3/backlinks/bulk_new_lost_referring_domains/live', 'POST', [{
         targets: params.targets
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

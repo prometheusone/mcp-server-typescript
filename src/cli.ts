@@ -11,7 +11,7 @@ const args = process.argv.slice(2);
 const mode = args[0] || 'local';
 
 if (mode === 'http') {
-    const httpServer = join(__dirname, 'index_http.js');
+    const httpServer = join(__dirname, 'index-http.js');
     spawn('node', [httpServer], { stdio: 'inherit' });
 } else if (mode === 'local') {
     const localServer = join(__dirname, 'index.js');

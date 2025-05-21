@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../client/dataforseo.client.js';
-import { filterFields, parseFieldPaths } from '../utils/field-filter.js';
 import { defaultGlobalToolConfig } from '../config/global.tool.js';
+import { filterFields, parseFieldPaths } from '../utils/field-filter.js';
 
-export interface DataForSEOResponse {
+export interface DataForSEOFullResponse {
   version: string;
   status_code: number;
   status_message: string;
@@ -24,16 +24,38 @@ export interface DataForSEOResponse {
   }>;
 }
 
+export interface DataForSEOResponse {
+  id: string;
+  status_code: number;
+  status_message: string;
+  items: any[];
+}
+
 export abstract class BaseTool {
   protected dataForSEOClient: DataForSEOClient;
-  protected fields: string[] = [];
 
   constructor(dataForSEOClient: DataForSEOClient) {
     this.dataForSEOClient = dataForSEOClient;
   }
 
+  protected supportOnlyFullResponse(): boolean {
+    return false;
+  }
+
   protected formatError(error: unknown): string {
     return error instanceof Error ? error.message : 'Unknown error';
+  }
+
+  protected validateAndFormatResponse (response: any): { content: Array<{ type: string; text: string }> } {
+    console.error(JSON.stringify(response));
+    if(defaultGlobalToolConfig.fullResponse || this.supportOnlyFullResponse()){
+      let data = response as DataForSEOFullResponse;
+      this.validateResponseFull(data);
+      let result = data.tasks[0].result;
+      return this.formatResponse(result);
+    }
+    this.validateResponse(response);
+    return this.formatResponse(response);
   }
 
   protected formatResponse(data: any): { content: Array<{ type: string; text: string }> } {
@@ -62,7 +84,13 @@ export abstract class BaseTool {
     if (response.status_code / 100 !== 200) {
       throw new Error(`API Error: ${response.status_message} (Code: ${response.status_code})`);
     }
+  }
 
+  protected validateResponseFull(response: DataForSEOFullResponse): void {
+    if (response.status_code / 100 !== 200) {
+      throw new Error(`API Error: ${response.status_message} (Code: ${response.status_code})`);
+    }
+    
     if (response.tasks.length === 0) {
       throw new Error('No tasks in response');
     }
@@ -77,45 +105,6 @@ export abstract class BaseTool {
     }
   }
 
-  protected handleItemsResult(result: any[]): any[] {
-    if (defaultGlobalToolConfig.fullResponse) {
-      return result;
-    }
-    if (!result[0]?.items) {
-      return this.filterResponseFields(result,this.fields);
-    }
-    if(this.fields.length === 0) {
-      return result[0].items;
-    }
-    return result[0].items.map((item: any) => {
-      return this.filterResponseFields(item,this.fields);
-    });
-  }
-
-  protected handleDirectResult(result: any[]): any[] {    
-    if (defaultGlobalToolConfig.fullResponse) {
-      return result;
-    }
-    return result.map((item: any)=> {
-      return this.filterResponseFields(item,this.fields);
-    })
-  }
-
-  private filterFields(data: any[]): any[] {
-    if (this.fields.length === 0) {
-      return data;
-    }
-    return data.map(item => {
-      const filteredItem: any = {};
-      this.fields.forEach(field => {
-        if (field in item) {
-          filteredItem[field] = item[field];
-        }
-      });
-      return filteredItem;
-    });
-  }
-
   abstract getName(): string;
   abstract getDescription(): string;
   abstract getParams(): z.ZodRawShape;
@@ -128,5 +117,25 @@ export abstract class BaseTool {
 
     const fieldPaths = parseFieldPaths(fields);
     return filterFields(response, fieldPaths);
+  }
+
+  protected formatFilters(filters: any[]): any
+  {
+    if(!filters)
+      return null;
+    if(filters.length === 0){
+      return null;
+    }
+    return filters;
+  }
+
+  protected formatOrderBy(orderBy: any[]): any
+  {
+    if(!orderBy)
+      return null;
+    if(orderBy.length === 0){
+      return null;
+    }
+    return orderBy;
   }
 } 

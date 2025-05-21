@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksBulkRanksTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
@@ -8,7 +8,7 @@ export class BacklinksBulkRanksTool extends BaseTool {
   }
 
   getName(): string {
-    return 'backlinks_bulk_ranks_tool';
+    return 'backlinks_bulk_ranks';
   }
 
   getDescription(): string {
@@ -49,11 +49,8 @@ one_thousand — rank values are displayed on a 0–1000 scale`).default('one_th
       const response = await this.client.makeRequest('/v3/backlinks/bulk_ranks/live', 'POST', [{
         targets: params.targets,
         rank_scale: params.rank_scale        
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

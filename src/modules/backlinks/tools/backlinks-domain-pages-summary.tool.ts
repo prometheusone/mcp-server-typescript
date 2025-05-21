@@ -1,29 +1,14 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksDomainPagesSummaryTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
-    super(client);
-    this.fields = [
-      "url",      
-      "rank",      
-      "backlinks",
-      "backlinks_spam_score",
-      "broken_backlinks",
-      "broken_pages",
-      "referring_domains",
-      "referring_pages",
-      "referring_links_tld",
-      "referring_links_attributes",
-      "referring_links_platform_types",
-      "referring_links_semantic_locations",
-      "referring_links_countries"
-    ]
+    super(client);    
   }
 
   getName(): string {
-    return 'backlinks_domain_pages_summary_tool';
+    return 'backlinks_domain_pages_summary';
   }
 
   getDescription(): string {
@@ -43,7 +28,12 @@ optional field
 default value: 0
 if you specify the 10 value, the first ten anchors in the results array will be omitted and the data will be provided for the successive anchors`
       ),
-      filters: z.array(z.any()).optional().describe(
+      filters: z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"])
+        ])
+      ).max(8).optional().describe(
         `array of results filtering parameters
 optional field
 you can add several filters at once (8 filters maximum)
@@ -59,9 +49,7 @@ example:
 
 [["first_seen",">","2017-10-23 11:31:45 +00:00"],
 "and",
-[["anchor","like","%seo%"],"or",["referring_domains",">","10"]]]
-        availiable fields for filter:
-        ${this.fields.join("\n")}`
+[["anchor","like","%seo%"],"or",["referring_domains",">","10"]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
@@ -87,13 +75,10 @@ example:
         target: params.target,
         limit: params.limit,
         offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by),
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

@@ -1,20 +1,10 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../../../base.tool.js';
+import { BaseTool } from '../../../../base.tool.js';
 
 export class GoogleTopSearchesTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
     super(client);
-    this.fields = [
-      "keyword",
-      "keyword_info.search_volume",
-      "keyword_info.cpc",
-      "keyword_info.competition",
-      "keyword_info.low_top_of_page_bid",
-      "keyword_info.high_top_of_page_bid",
-      "keyword_properties.keyword_difficulty",
-      "search_intent_info.main_intent"    
-    ]
   }
 
   getName(): string {
@@ -44,7 +34,12 @@ United Kingdom`),
         default value: 0
         if you specify the 10 value, the first ten keywords in the results array will be omitted and the data will be provided for the successive keywords`
       ),
-      filters: z.array(z.any()).optional().describe(
+      filters: z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"])
+        ])
+      ).max(8).optional().describe(
         `you can add several filters at once (8 filters maximum)
         you should set a logical operator and, or between the conditions
         the following operators are supported:
@@ -59,10 +54,7 @@ United Kingdom`),
 "and",
 [["keyword_info.cpc","<",0.5],
 "or",
-["keyword_info.high_top_of_page_bid","<=",0.5]]]
-
-        availiable fields for filter:
-        ${this.fields.join("\n")}`
+["keyword_info.high_top_of_page_bid","<=",0.5]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
@@ -91,15 +83,10 @@ United Kingdom`),
         language_code: params.language_code,
         limit: params.limit,
         offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      console.error('FILTERED');
-      console.error(JSON.stringify(filteredResults));
-      return this.formatResponse(filteredResults);
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by),
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

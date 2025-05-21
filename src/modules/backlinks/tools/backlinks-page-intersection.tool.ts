@@ -1,19 +1,15 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 import { mapArrayToNumberedKeys } from '../../../utils/map-array-to-numbered-keys.js';
 
 export class BacklinksPageIntersectionTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
     super(client);
-    this.fields = [
-      "summary",
-      "page_intersection",      
-    ]
   }
 
   getName(): string {
-    return 'backlinks_page_intersection_tool';
+    return 'backlinks_page_intersection';
   }
 
   getDescription(): string {
@@ -34,7 +30,12 @@ optional field
 default value: 0
 if you specify the 10 value, the first ten backlinks in the results array will be omitted and the data will be provided for the successive backlinks`
       ),
-      filters: z.array(z.any()).optional().describe(
+      filters: z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"])
+        ])
+      ).max(8).optional().describe(
         `array of results filtering parameters
 optional field
 you can add several filters at once (8 filters maximum)
@@ -50,9 +51,7 @@ example:
 
 [["1.first_seen",">","2017-10-23 11:31:45 +00:00"],
 "and",
-[["1.acnhor","like","%seo%"],"or",["1.text_pre","not_like","%seo%"]]]
-        availiable fields for filter:
-        ${this.fields.join("\n")}`
+[["1.anchor","like","%seo%"],"or",["1.text_pre","not_like","%seo%"]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
@@ -78,13 +77,10 @@ example:
         targets: mapArrayToNumberedKeys(params.targets),
         limit: params.limit,
         offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by),
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

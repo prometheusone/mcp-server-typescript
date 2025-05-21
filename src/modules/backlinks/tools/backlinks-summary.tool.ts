@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksSummaryTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
@@ -8,7 +8,7 @@ export class BacklinksSummaryTool extends BaseTool {
   }
 
   getName(): string {
-    return 'backlinks_summary_tool';
+    return 'backlinks_summary';
   }
 
   getDescription(): string {
@@ -36,16 +36,13 @@ if set to false, internal links will be included in the results`).default(true)
         target: params.target,
         limit: params.limit,
         offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by,
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by),
         main_domain: params.main_domain,
         exclude_large_domains: params.exclude_large_domains,
         exclude_internal_backlinks: params.exclude_internal_backlinks
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

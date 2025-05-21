@@ -11,7 +11,7 @@ import { BaseModule } from './modules/base.module.js';
 import { z } from 'zod';
 import { BacklinksApiModule } from "./modules/backlinks/backlinks-api.module.js";7
 import { BusinessDataApiModule } from "./modules/business-data-api/business-data-api.module.js";
-import { DomainAnalyticsApiModule } from "./modules/domain_analytics/domain-analytics-api.module.js";
+import { DomainAnalyticsApiModule } from "./modules/domain-analytics/domain-analytics-api.module.js";
 
 interface ToolDefinition {
   description: string;

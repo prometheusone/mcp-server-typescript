@@ -1,19 +1,10 @@
 import { z } from 'zod';
 import { BaseTool } from '../../base.tool.js';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { DataForSEOResponse } from '../../base.tool.js';
 
 export class GoogleAdsSearchVolumeTool extends BaseTool {
   constructor(dataForSEOClient: DataForSEOClient) {
     super(dataForSEOClient);
-    this.fields = [
-      'keyword',
-      'search_volume',
-      'cpc',
-      'competition',
-      'high_top_of_page_bid',
-      'low_top_of_page_bid'
-    ];
   }
 
   getName(): string {
@@ -42,11 +33,8 @@ export class GoogleAdsSearchVolumeTool extends BaseTool {
         location_name: params.location_name,
         language_code: params.language_code,
         keywords: params.keywords,
-      }]) as DataForSEOResponse;
-      
-      this.validateResponse(response);
-      const filteredResults = this.handleDirectResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }
