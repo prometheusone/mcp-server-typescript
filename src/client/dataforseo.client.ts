@@ -15,7 +15,6 @@ export class DataForSEOClient {
     if(!defaultGlobalToolConfig.fullResponse && !forceFull){
       url += '.ai';
     }
-    console.error(url);
     // Import version dynamically to avoid circular dependencies
     const { version } = await import('../utils/version.js');
     

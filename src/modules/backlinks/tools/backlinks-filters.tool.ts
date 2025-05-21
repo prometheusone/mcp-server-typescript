@@ -37,7 +37,7 @@ export class BacklinksFiltersTool extends BaseTool {
   }
 
   getName(): string {
-    return 'backlinks_filters_tool';
+    return 'backlinks_filters';
   }
 
   getDescription(): string {
