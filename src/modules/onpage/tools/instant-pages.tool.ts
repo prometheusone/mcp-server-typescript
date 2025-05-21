@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class InstantPagesTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
@@ -39,10 +39,8 @@ export class InstantPagesTool extends BaseTool {
           custom_js: params.custom_js,
           custom_user_agent: params.custom_user_agent,
           accept_language: params.accept_language,
-        }]) as DataForSEOResponse;
-        this.validateResponse(response);
-        const filteredResults = this.handleItemsResult(response.tasks[0].result);
-        return this.formatResponse(filteredResults);
+        }]);
+        return this.validateAndFormatResponse(response);
       } catch (error) {
         return this.formatErrorResponse(error);
       }

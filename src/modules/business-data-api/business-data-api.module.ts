@@ -1,5 +1,5 @@
 import { BaseModule, ToolDefinition } from '../base.module.js';
-import { BusinessDataBusinessListingsSearchTool } from './listings/business-listings-search.tool.js';
+import { BusinessDataBusinessListingsSearchTool } from './tools/listings/business-listings-search.tool.js';
 
 export class BusinessDataApiModule extends BaseModule {
   getTools(): Record<string, ToolDefinition> {

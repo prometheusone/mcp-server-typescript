@@ -1,26 +1,14 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
     super(client);
-    this.fields = [
-      "domain_from",      
-      "domain_to",      
-      "url_from",      
-      "url_to",      
-      "rank",      
-      "page_from_rank",      
-      "domain_from_rank",
-      "domain_from_country",
-      "page_from_title",
-      "is_new"
-    ]
   }
 
   getName(): string {
-    return 'backlinks_backlinks_list_tool';
+    return 'backlinks_backlinks_list';
   }
 
   getDescription(): string {
@@ -47,7 +35,12 @@ optional field
 default value: 0
 if you specify the 10 value, the first ten backlinks in the results array will be omitted and the data will be provided for the successive backlinks`
       ),
-      filters: z.array(z.any()).optional().describe(
+      filters: z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"])
+        ])
+      ).max(8).optional().describe(
         `array of results filtering parameters
 optional field
 you can add several filters at once (8 filters maximum)
@@ -63,10 +56,7 @@ example:
 
 [["first_seen",">","2017-10-23 11:31:45 +00:00"],
 "and",
-[["anchor","like","%seo%"],"or",["text_pre","like","%seo%"]]]
-        availiable fields for filter:
-        ${this.fields.join("\n")}`
-      ),
+[["anchor","like","%seo%"],"or",["text_pre","like","%seo%"]]]`      ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
 optional field
@@ -92,13 +82,10 @@ example:
         mode: params.mode,
         limit: params.limit,
         offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by)
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

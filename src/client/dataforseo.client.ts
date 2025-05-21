@@ -1,3 +1,5 @@
+import { defaultGlobalToolConfig } from '../config/global.tool.js';
+
 export class DataForSEOClient {
   private config: DataForSEOConfig;
   private authHeader: string;
@@ -8,9 +10,12 @@ export class DataForSEOClient {
     this.authHeader = `Basic ${token}`;
   }
 
-  async makeRequest<T>(endpoint: string, method: string = 'POST', body?: any): Promise<T> {
-    const url = `${this.config.baseUrl || "https://api.dataforseo.com"}${endpoint}`;
-    
+  async makeRequest<T>(endpoint: string, method: string = 'POST', body?: any, forceFull: boolean = false): Promise<T> {
+    let url = `${this.config.baseUrl || "https://api.dataforseo.com"}${endpoint}`;    
+    if(!defaultGlobalToolConfig.fullResponse && !forceFull){
+      url += '.ai';
+    }
+    console.error(url);
     // Import version dynamically to avoid circular dependencies
     const { version } = await import('../utils/version.js');
     

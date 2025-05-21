@@ -1,34 +1,14 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksDomainPagesTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
     super(client);
-    this.fields = [
-      "domain",      
-      "page",      
-      "ip",      
-      "first_visited",      
-      "fetch_time",      
-      "status_code",      
-      "meta.title",
-      "meta.words_count",
-      "meta.internal_links_count",
-      "meta.external_links_count",
-      "meta.platform_type",
-      "meta.language",
-      "meta.technologies",
-      "page_summary.rank",
-      "page_summary.backlinks",
-      "page_summary.broken_backlinks",
-      "page_summary.referring_domains",
-      "page_summary.referring_links_platform_types"
-    ]
   }
 
   getName(): string {
-    return 'backlinks_domain_pages_tool';
+    return 'backlinks_domain_pages';
   }
 
   getDescription(): string {
@@ -48,7 +28,12 @@ optional field
 default value: 0
 if you specify the 10 value, the first ten pages in the results array will be omitted and the data will be provided for the successive pages`
       ),
-      filters: z.array(z.any()).optional().describe(
+      filters: z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"])
+        ])
+      ).max(8).optional().describe(
         `array of results filtering parameters
 optional field
 you can add several filters at once (8 filters maximum)
@@ -64,9 +49,7 @@ example:
 
 [["first_visited",">","2017-10-23 11:31:45 +00:00"],
 "and",
-[["title","like","%seo%"],"or",["referring_domains",">","10"]]]
-        availiable fields for filter:
-        ${this.fields.join("\n")}`
+[["title","like","%seo%"],"or",["referring_domains",">","10"]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
@@ -92,13 +75,10 @@ example:
         target: params.target,
         limit: params.limit,
         offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by),
+      }]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

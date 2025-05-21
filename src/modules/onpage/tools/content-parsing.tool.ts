@@ -1,14 +1,12 @@
 import { z } from 'zod';
-import { BaseTool } from '../../base.tool.js';
+import { BaseTool, DataForSEOFullResponse } from '../../base.tool.js';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
 import { DataForSEOResponse } from '../../base.tool.js';
+import { defaultGlobalToolConfig } from '../../../config/global.tool.js';
 
 export class ContentParsingTool extends BaseTool {
   constructor(dataForSEOClient: DataForSEOClient) {
     super(dataForSEOClient);
-    this.fields = [
-      'page_content'
-    ];
   }
 
   getName(): string {
@@ -43,10 +41,21 @@ export class ContentParsingTool extends BaseTool {
         custom_js: params.custom_js,
         custom_user_agent: params.custom_user_agent,
         accept_language: params.accept_language,
-      }]) as DataForSEOResponse;
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+        markdown_view: true
+      }]);
+      console.error(JSON.stringify(response));
+      if(defaultGlobalToolConfig.fullResponse || this.supportOnlyFullResponse()){
+        let data = response as DataForSEOFullResponse;
+        this.validateResponseFull(data);
+        let result = data.tasks[0].result;
+        return this.formatResponse(result);
+      }
+      else{
+        let data = response as DataForSEOResponse;
+        this.validateResponse(data);
+        let result = data.items[0].page_as_markdown;
+        return this.formatResponse(result);
+      }
     } catch (error) {
       return this.formatErrorResponse(error);
     }

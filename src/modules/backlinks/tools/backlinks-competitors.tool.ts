@@ -1,19 +1,14 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../base.tool.js';
+import { BaseTool } from '../../base.tool.js';
 
 export class BacklinksCompetitorsTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
     super(client);
-    this.fields = [
-      "target", 
-      "rank",
-      "intersections"
-    ]
   }
 
   getName(): string {
-    return 'backlinks_competitors_tool';
+    return 'backlinks_competitors';
   }
 
   getDescription(): string {
@@ -33,7 +28,12 @@ optional field
 default value: 0
 if you specify the 10 value, the first ten domains in the results array will be omitted and the data will be provided for the successive pages`
       ),
-      filters: z.array(z.any()).optional().describe(
+      filters: z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"])
+        ])
+      ).max(8).optional().describe(
         `array of results filtering parameters
 optional field
 you can add several filters at once (8 filters maximum)
@@ -45,9 +45,7 @@ example:
 ["rank",">","100"]
 [["target","like","%forbes%"],
 "and",
-[["rank",">","100"],"or",["intersections",">","5"]]]
-        availiable fields for filter:
-        ${this.fields.join("\n")}`
+[["rank",">","100"],"or",["intersections",">","5"]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
@@ -80,16 +78,14 @@ if set to false, internal links will be included in the results`).default(true)
         target: params.target,
         limit: params.limit,
         offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by,
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by),
         main_domain: params.main_domain,
         exclude_large_domains: params.exclude_large_domains,
         exclude_internal_backlinks: params.exclude_internal_backlinks
-      }]) as DataForSEOResponse;
-      console.error(JSON.stringify(response));
-      this.validateResponse(response);
-      const filteredResults = this.handleItemsResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+      }]);
+      return this.validateAndFormatResponse(response);
+
     } catch (error) {
       return this.formatErrorResponse(error);
     }

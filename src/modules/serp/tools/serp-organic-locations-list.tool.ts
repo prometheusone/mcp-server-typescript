@@ -1,14 +1,11 @@
 import { z } from 'zod';
-import { BaseTool } from '../../base.tool.js';
+import { BaseTool, DataForSEOFullResponse } from '../../base.tool.js';
 import { DataForSEOClient } from '../../../client/dataforseo.client.js';
 import { DataForSEOResponse } from '../../base.tool.js';
 
 export class SerpOrganicLocationsListTool extends BaseTool {
   constructor(dataForSEOClient: DataForSEOClient) {
     super(dataForSEOClient);
-    this.fields = [
-      'location_name'
-    ];
   }
 
   getName(): string {
@@ -17,6 +14,10 @@ export class SerpOrganicLocationsListTool extends BaseTool {
 
   getDescription(): string {
     return 'Utility tool for serp-organic-live-advanced to get list of availible locations';
+  }
+
+  protected supportOnlyFullResponse(): boolean {
+    return true;
   }
 
   getParams(): z.ZodRawShape {
@@ -29,11 +30,9 @@ export class SerpOrganicLocationsListTool extends BaseTool {
   async handle(params:any): Promise<any> {
     try {
       console.error(JSON.stringify(params, null, 2));
-      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/${params.search_engine}/locations/${params.country_code}`, 'GET') as DataForSEOResponse;
-      
-      this.validateResponse(response);
-      const filteredResults = this.handleDirectResult(response.tasks[0].result);
-      return this.formatResponse(filteredResults);
+      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/${params.search_engine}/locations/${params.country_code}`, 'GET', null, true) as DataForSEOFullResponse;      
+      this.validateResponseFull(response);
+      return this.formatResponse(response.tasks[0].result.map(x => x.location_name));
     } catch (error) {
       return this.formatErrorResponse(error);
     }
