@@ -8,7 +8,7 @@ export class GoogleHistoricalDomainRankOverviewTool extends BaseTool {
   }
 
   getName(): string {
-    return 'dataforseo_labs/_google_historical_rank_overview';
+    return 'dataforseo_labs_google_historical_rank_overview';
   }
 
   getDescription(): string {
