@@ -8,7 +8,7 @@ export class InstantPagesTool extends BaseTool {
   }
 
   getName(): string {
-    return 'instant_pages';
+    return 'on_page_instant_pages';
   }
 
   getDescription(): string {

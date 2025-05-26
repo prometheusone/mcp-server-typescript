@@ -8,7 +8,7 @@ export class GoogleRelatedKeywordsTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_related_keywords';
+    return 'dataforseo_labs_google_related_keywords';
   }
 
   getDescription(): string {
@@ -17,7 +17,7 @@ export class GoogleRelatedKeywordsTool extends BaseTool {
 You can get up to 4680 keyword ideas by specifying the search depth. Each related keyword comes with the list of relevant product categories, search volume rate for the last month, search volume trend for the previous 12 months, as well as current cost-per-click and competition values. Moreover, this endpoint supplies minimum, maximum and average values of daily impressions, clicks and CPC for each result.
 
 Datasource: DataForSEO SERPs Database
-Search algorithm: depth-first search for queries appearing in the “search related to” element of SERP for the specified seed keyword.
+Search algorithm: depth-first search for queries appearing in the "search related to" element of SERP for the specified seed keyword.
 `;
   }
 

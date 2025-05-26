@@ -8,7 +8,7 @@ export class GoogleSubdomainsTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_subdomains';
+    return 'dataforseo_labs_google_subdomains';
   }
 
   getDescription(): string {

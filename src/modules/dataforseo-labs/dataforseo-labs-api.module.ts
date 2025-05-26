@@ -3,7 +3,7 @@ import { BaseModule, ToolDefinition } from '../base.module.js';
 import { GoogleDomainCompetitorsTool } from './tools/google/competitor-research/google-domain-competitors.tool.js';
 import { GoogleDomainRankOverviewTool } from './tools/google/competitor-research/google-domain-rank-overview.tool.js';
 import { GoogleKeywordsIdeasTool } from './tools/google/keyword-research/google-keywords-ideas.tool.js';
-import { GoogleKeywordsSuggestionsTool } from './tools/google/keyword-research/google-keywords-suggestions.tool copy.js';
+import { GoogleKeywordsSuggestionsTool } from './tools/google/keyword-research/google-keywords-suggestions.tool.js';
 import { GoogleRankedKeywordsTool } from './tools/google/competitor-research/google-ranked-keywords.tool.js';
 import { GoogleRelatedKeywordsTool } from './tools/google/keyword-research/google-related-keywords.tool.js';
 import { GoogleBulkKeywordDifficultyTool } from './tools/google/keyword-research/google-bulk-keyword-difficulty.tool.js';

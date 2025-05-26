@@ -8,7 +8,7 @@ export class DomainTechnologiesTool extends BaseTool {
   }
 
   getName(): string {
-    return 'domain_technologies';
+    return 'domain_analytics_technologies_domain_technologies';
   }
 
   getDescription(): string {

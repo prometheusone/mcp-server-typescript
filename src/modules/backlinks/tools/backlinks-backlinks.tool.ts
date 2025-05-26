@@ -8,7 +8,7 @@ export class BacklinksTool extends BaseTool {
   }
 
   getName(): string {
-    return 'backlinks_backlinks_list';
+    return 'backlinks_backlinks';
   }
 
   getDescription(): string {

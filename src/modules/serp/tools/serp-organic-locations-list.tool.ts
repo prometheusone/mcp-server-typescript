@@ -9,7 +9,7 @@ export class SerpOrganicLocationsListTool extends BaseTool {
   }
 
   getName(): string {
-    return 'serp-organic-locations-list';
+    return 'serp_locations';
   }
 
   getDescription(): string {

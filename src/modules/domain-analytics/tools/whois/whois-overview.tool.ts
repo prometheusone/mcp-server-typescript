@@ -8,7 +8,7 @@ export class WhoisOverviewTool extends BaseTool {
   }
 
   getName(): string {
-    return 'whois_overview';
+    return 'domain_analytics_whois_overview';
   }
 
   getDescription(): string {

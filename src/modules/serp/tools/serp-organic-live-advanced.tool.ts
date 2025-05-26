@@ -8,7 +8,7 @@ export class SerpOrganicLiveAdvancedTool extends BaseTool {
   }
 
   getName(): string {
-    return 'serp-organic-live-advanced';
+    return 'serp_organic_live_advanced';
   }
 
   getDescription(): string {

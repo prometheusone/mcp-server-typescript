@@ -8,7 +8,7 @@ export class BusinessDataBusinessListingsSearchTool extends BaseTool {
   }
 
   getName(): string {
-    return 'business_listings_search';
+    return 'business_data_business_listings_search';
   }
 
   getDescription(): string {

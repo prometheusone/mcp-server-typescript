@@ -9,7 +9,7 @@ export class GooglePageIntersectionsTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_page_intersections';
+    return 'dataforseo_labs_google_page_intersection';
   }
 
   getDescription(): string {

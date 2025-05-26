@@ -20,7 +20,7 @@ export class WhoisFiltersTool extends BaseTool {
 
   // Map of tool names to their corresponding filter paths in the API response
   private static readonly TOOL_TO_FILTER_MAP: { [key: string]: string } = {
-    'whois_overview': 'overview'
+    'domain_analytics_whois_overview': 'overview'
   };
 
   constructor(private client: DataForSEOClient) {
@@ -28,7 +28,7 @@ export class WhoisFiltersTool extends BaseTool {
   }
 
   getName(): string {
-    return 'whois_filters_tool';
+    return 'domain_analytics_whois_available_filters';
   }
 
   getDescription(): string {
