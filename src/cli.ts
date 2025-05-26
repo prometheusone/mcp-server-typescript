@@ -13,10 +13,13 @@ const mode = args[0] || 'local';
 if (mode === 'http') {
     const httpServer = join(__dirname, 'index-http.js');
     spawn('node', [httpServer], { stdio: 'inherit' });
+} else if (mode === 'sse') {
+    const sseServer = join(__dirname, 'index-sse-http.js');
+    spawn('node', [sseServer], { stdio: 'inherit' });
 } else if (mode === 'local') {
     const localServer = join(__dirname, 'index.js');
     spawn('node', [localServer], { stdio: 'inherit' });
 } else {
-    console.error('Invalid mode. Use "local" or "http"');
+    console.error('Invalid mode. Use "local", "http", or "sse"');
     process.exit(1);
 } 
