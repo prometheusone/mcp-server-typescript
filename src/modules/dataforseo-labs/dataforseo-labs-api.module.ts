@@ -14,9 +14,9 @@ import { GoogleSubdomainsTool } from './tools/google/competitor-research/google-
 import { GoogleSERPCompetitorsTool } from './tools/google/competitor-research/google-serp-competitors.tool.js';
 import { GoogleHistoricalSERP } from './tools/google/competitor-research/google-historical-serp.js';
 import { GoogleSearchIntentTool } from './tools/google/keyword-research/google-search-intent.tool.js';
-import { GoogleDomainIntersectionsTool } from './tools/google/competitor-research/google-domain-intersections.tool.js';
+import { GoogleDomainIntersectionsTool } from './tools/google/competitor-research/google-domain-intersection.tool.js';
 import { GoogleHistoricalDomainRankOverviewTool } from './tools/google/competitor-research/google-historical-domain-rank-overview.tool.js';
-import { GooglePageIntersectionsTool } from './tools/google/competitor-research/google-page-intersections.tool.js';
+import { GooglePageIntersectionsTool } from './tools/google/competitor-research/google-page-intersection.tool.js';
 import { DataForSeoLabsFilterTool } from './tools/labs-filters.tool.js';
 
 export class DataForSEOLabsApi extends BaseModule {
