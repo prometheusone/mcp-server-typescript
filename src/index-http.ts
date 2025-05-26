@@ -255,7 +255,7 @@ async function main() {
   });
 
   // Start the server
-  const PORT = 3000;
+  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
   app.listen(PORT, () => {
     console.log(`MCP Stateless Streamable HTTP Server listening on port ${PORT}`);
   });

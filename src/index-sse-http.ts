@@ -380,7 +380,7 @@ app.post("/messages", basicAuth, async (req: Request, res: Response) => {
 });
 
 // Start the server
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const server = app.listen(PORT, () => {
   console.log(`DataForSEO MCP Server with SSE compatibility listening on port ${PORT}`);
   console.log(`
