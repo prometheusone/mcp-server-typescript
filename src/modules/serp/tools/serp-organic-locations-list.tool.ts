@@ -13,7 +13,7 @@ export class SerpOrganicLocationsListTool extends BaseTool {
   }
 
   getDescription(): string {
-    return 'Utility tool for serp-organic-live-advanced to get list of availible locations';
+    return 'Utility tool for serp_organic_live_advanced to get list of availible locations';
   }
 
   protected supportOnlyFullResponse(): boolean {
