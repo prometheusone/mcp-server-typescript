@@ -10,7 +10,7 @@ export class ContentParsingTool extends BaseTool {
   }
 
   getName(): string {
-    return 'onpage-content-parsing';
+    return 'on_page_content_parsing';
   }
 
   getDescription(): string {

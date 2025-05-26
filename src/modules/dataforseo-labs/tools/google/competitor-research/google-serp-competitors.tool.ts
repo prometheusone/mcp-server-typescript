@@ -8,7 +8,7 @@ export class GoogleSERPCompetitorsTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_serp_competitors';
+    return 'dataforseo_labs_google_serp_competitors';
   }
 
   getDescription(): string {

@@ -1,26 +1,24 @@
 import { z } from 'zod';
 import { DataForSEOClient } from '../../../../../client/dataforseo.client.js';
-import { BaseTool, DataForSEOResponse } from '../../../../base.tool.js';
+import { BaseTool } from '../../../../base.tool.js';
 
-export class GoogleRankedKeywordsTool extends BaseTool {
+export class GoogleDomainIntersectionsTool extends BaseTool {
   constructor(private client: DataForSEOClient) {
     super(client);
   }
 
   getName(): string {
-    return 'datalabs_google_ranked_keywords';
+    return 'dataforseo_labs_google_domain_intersection';
   }
 
   getDescription(): string {
-    return "This endpoint will provide you with the list of keywords that any domain or webpage is ranking for. You will also get SERP elements related to the keyword position, as well as impressions, monthly searches and other data relevant to the returned keywords.";
+    return `This endpoint will provide you with the keywords for which both specified domains rank within the same SERP. You will get search volume, competition, cost-per-click and impressions data on each intersecting keyword. Along with that, you will get data on the first and second domain's SERP element discovered for this keyword, as well as the estimated traffic volume and cost of ad traffic.`;
   }
 
   getParams(): z.ZodRawShape {
     return {
-      target: z.string().describe(`domain
-required field
-the domain name of the target website
-the domain should be specified without https:// and www.`),
+      target1: z.string().describe(`target domain 1`),
+      target2: z.string().describe(`target domain 2 `),
       location_name: z.string().default("United States").describe(`full name of the location
 required field
 in format "Country"
@@ -31,6 +29,8 @@ United Kingdom`),
         required field
         example:
         en`),
+      ignore_synonyms: z.boolean().default(true).describe(
+          `ignore highly similar keywords, if set to true, results will be more accurate`),
       limit: z.number().min(1).max(1000).default(10).optional().describe("Maximum number of keywords to return"),
       offset: z.number().min(0).optional().describe(
         `offset in the results array of returned keywords
@@ -38,7 +38,12 @@ United Kingdom`),
         default value: 0
         if you specify the 10 value, the first ten keywords in the results array will be omitted and the data will be provided for the successive keywords`
       ),
-      filters: z.array(z.any()).optional().describe(
+      filters: z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"])
+        ])
+      ).max(8).optional().describe(
         `you can add several filters at once (8 filters maximum)
         you should set a logical operator and, or between the conditions
         the following operators are supported:
@@ -46,15 +51,10 @@ United Kingdom`),
         you can use the % operator with like and not_like, as well as ilike and not_ilike to match any string of zero or more characters
         merge operator must be a string and connect two other arrays, availible values: or, and.
         example:
-        ["ranked_serp_element.serp_item.rank_group","<=",10]
-
-        [["ranked_serp_element.serp_item.rank_group","<=",10],
-        "or",
-        ["ranked_serp_element.serp_item.type","<>","paid"]]
-
-        [["keyword_data.keyword_info.search_volume","<>",0],
-        "and",
-        [["ranked_serp_element.serp_item.type","<>","paid"],"or",["ranked_serp_element.serp_item.is_malicious","=",false]]]`      ),
+        ["keyword_data.keyword_info.search_volume","in",[100,1000]]
+        [["first_domain_serp_element.etv",">",0],"and",["first_domain_serp_element.description","like","%goat%"]]
+        [["keyword_data.keyword_info.search_volume",">",100],"and",[["first_domain_serp_element.description","like","%goat%"],"or",["second_domain_serp_element.type","=","organic"]]]`
+      ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
         optional field
@@ -66,28 +66,28 @@ United Kingdom`),
         example:
         ["keyword_data.keyword_info.competition,desc"]
         default rule:
-        ["ranked_serp_element.serp_item.rank_group,asc"]
+        ["keyword_data.keyword_info.search_volume,desc"]
         note that you can set no more than three sorting rules in a single request
         you should use a comma to separate several sorting rules
         example:
         ["keyword_data.keyword_info.search_volume,desc","keyword_data.keyword_info.cpc,desc"]`
-      ),
-      include_subdomains: z.boolean().optional().describe("Include keywords from subdomains"),
-      include_serp_info: z.boolean().optional().describe("Include SERP information")
+      )
     };
   }
 
   async handle(params: any): Promise<any> {
     try {
-      const response = await this.client.makeRequest('/v3/dataforseo_labs/google/ranked_keywords/live', 'POST', [{
-        target: params.target,
+      const response = await this.client.makeRequest('/v3/dataforseo_labs/google/domain_intersection/live', 'POST', [{
+        target1: params.target1,
+        target2: params.target2,
         location_name: params.location_name,
         language_code: params.language_code,
-        limit: params.limit,
-        offset: params.offset,
-        filters: params.filters,
-        order_by: params.order_by
-      }])
+        ignore_synonyms: params.ignore_synonyms,
+        filters: this.formatFilters(params.filters),
+        order_by: this.formatOrderBy(params.order_by),
+        exclude_top_domains: params.exclude_top_domains,
+        item_types: ['organic']
+      }]);
       return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);

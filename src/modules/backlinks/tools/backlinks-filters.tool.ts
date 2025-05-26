@@ -21,7 +21,7 @@ export class BacklinksFiltersTool extends BaseTool {
   // Map of tool names to their corresponding filter paths in the API response
   private static readonly TOOL_TO_FILTER_MAP: { [key: string]: string } = {
     'backlinks_content_duplicates': 'content_duplicates',
-    'backlinks_backlinks_list': 'backlinks',
+    'backlinks_backlinks': 'backlinks',
     'backlinks_domain_pages': 'domain_pages',
     'backlinks_anchors': 'anchors',
     'backlinks_referring_domains': 'referring_domains',
@@ -37,7 +37,7 @@ export class BacklinksFiltersTool extends BaseTool {
   }
 
   getName(): string {
-    return 'backlinks_filters';
+    return 'backlinks_available_filters';
   }
 
   getDescription(): string {

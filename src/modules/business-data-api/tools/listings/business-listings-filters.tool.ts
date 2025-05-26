@@ -13,14 +13,15 @@ interface ToolFilters {
   };
 }
 
-export class BusinessListingsFilterTool extends BaseTool {
+export class BusinessListingsFiltersTool extends BaseTool {
   private static cache: ToolFilters | null = null;
   private static lastFetchTime: number = 0;
   private static readonly CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
   // Map of tool names to their corresponding filter paths in the API response
   private static readonly TOOL_TO_FILTER_MAP: { [key: string]: string } = {
-    'business_listings_search': 'search'
+    'business_data_business_listings_search': 'search',
+    'business_data_business_listings_categories_aggregation': 'categories_aggregation'
   };
 
   constructor(private client: DataForSEOClient) {
@@ -28,11 +29,12 @@ export class BusinessListingsFilterTool extends BaseTool {
   }
 
   getName(): string {
-    return 'business_listings_filters';
+    return 'business_data_business_listings_filters';
   }
 
   getDescription(): string {
     return `Here you will find all the necessary information about filters that can be used with Business Data API business listings endpoints.
+
 Please, keep in mind that filters are associated with a certain object in the result array, and should be specified accordingly.`;
   }
 
@@ -50,9 +52,9 @@ Please, keep in mind that filters are associated with a certain object in the re
     const now = Date.now();
     
     // Return cached data if it's still valid
-    if (BusinessListingsFilterTool.cache && 
-        (now - BusinessListingsFilterTool.lastFetchTime) < BusinessListingsFilterTool.CACHE_TTL) {
-      return BusinessListingsFilterTool.cache;
+    if (BusinessListingsFiltersTool.cache && 
+        (now - BusinessListingsFiltersTool.lastFetchTime) < BusinessListingsFiltersTool.CACHE_TTL) {
+      return BusinessListingsFiltersTool.cache;
     }
 
     // Fetch fresh data
@@ -64,15 +66,15 @@ Please, keep in mind that filters are associated with a certain object in the re
     const result = response.tasks[0].result[0];
 
     // Process each tool's filters
-    for (const [toolName, filterPath] of Object.entries(BusinessListingsFilterTool.TOOL_TO_FILTER_MAP)) {
+    for (const [toolName, filterPath] of Object.entries(BusinessListingsFiltersTool.TOOL_TO_FILTER_MAP)) {
       if (result && result[filterPath]) {
         filters[toolName] = result[filterPath];
       }
     }
 
     // Update cache
-    BusinessListingsFilterTool.cache = filters;
-    BusinessListingsFilterTool.lastFetchTime = now;
+    BusinessListingsFiltersTool.cache = filters;
+    BusinessListingsFiltersTool.lastFetchTime = now;
     return filters;
   }
 

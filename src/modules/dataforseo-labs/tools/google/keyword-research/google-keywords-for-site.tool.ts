@@ -8,7 +8,7 @@ export class GoogleKeywordsForSiteTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_keywords_for_site';
+    return 'dataforseo_labs_google_keywords_for_site';
   }
 
   getDescription(): string {

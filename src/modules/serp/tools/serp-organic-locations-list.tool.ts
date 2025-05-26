@@ -9,11 +9,11 @@ export class SerpOrganicLocationsListTool extends BaseTool {
   }
 
   getName(): string {
-    return 'serp-organic-locations-list';
+    return 'serp_locations';
   }
 
   getDescription(): string {
-    return 'Utility tool for serp-organic-live-advanced to get list of availible locations';
+    return 'Utility tool for serp_organic_live_advanced to get list of availible locations';
   }
 
   protected supportOnlyFullResponse(): boolean {

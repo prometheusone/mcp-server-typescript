@@ -8,7 +8,7 @@ export class GoogleKeywordsIdeasTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_keywords_ideas';
+    return 'dataforseo_labs_google_keyword_ideas';
   }
 
   getDescription(): string {
@@ -20,7 +20,7 @@ Along with each keyword idea, you will get its search volume rate for the last m
 
   getParams(): z.ZodRawShape {
     return {
-      keyword: z.string().describe(`target keyword`),
+      keywords: z.array(z.string()).describe(`target keywords`),
       location_name: z.string().default("United States").describe(`full name of the location
 required field
 in format "Country"
@@ -78,7 +78,7 @@ United Kingdom`),
   async handle(params: any): Promise<any> {
     try {
       const response = await this.client.makeRequest('/v3/dataforseo_labs/google/keyword_ideas/live', 'POST', [{
-        keywords: [params.keyword],
+        keywords: params.keywords,
         location_name: params.location_name,
         language_code: params.language_code,
         limit: params.limit,

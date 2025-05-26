@@ -9,7 +9,7 @@ export class GoogleHistoricalSERP extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_historical_serp';
+    return 'dataforseo_labs_google_historical_serp';
   }
 
   getDescription(): string {

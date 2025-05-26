@@ -8,7 +8,7 @@ export class GoogleTopSearchesTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_top_searches';
+    return 'dataforseo_labs_google_top_searches';
   }
 
   getDescription(): string {

@@ -20,10 +20,10 @@ export class DomainTechnologiesFiltersTool extends BaseTool {
 
   // Map of tool names to their corresponding filter paths in the API response
   private static readonly TOOL_TO_FILTER_MAP: { [key: string]: string } = {
-    'technologies_domains_by_technology': 'domains_by_technology',
-    'technologies_aggregation_technologies': 'aggregation_technologies',
-    'technologies_technologies_summary': 'technologies_summary',
-    'technologies_domains_by_html_terms': 'domains_by_html_terms'
+    'domain_analytics_technologies_domains_by_technology': 'domains_by_technology',
+    'domain_analytics_technologies_aggregation_technologies': 'aggregation_technologies',
+    'domain_analytics_technologies_technologies_summary': 'technologies_summary',
+    'domain_analytics_technologies_domains_by_html_terms': 'domains_by_html_terms'
   };
 
   constructor(private client: DataForSEOClient) {
@@ -31,7 +31,7 @@ export class DomainTechnologiesFiltersTool extends BaseTool {
   }
 
   getName(): string {
-    return 'technologies_filters_tool';
+    return 'domain_analytics_technologies_available_filters';
   }
 
   getDescription(): string {

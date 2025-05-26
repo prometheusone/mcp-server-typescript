@@ -8,7 +8,7 @@ export class GoogleDomainCompetitorsTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_domain_competitors';
+    return 'dataforseo_labs_google_competitors_domain';
   }
 
   getDescription(): string {
@@ -74,7 +74,7 @@ United Kingdom`),
         default rule:
         ["metrics.organic.count,desc"]`
           ),
-      exclude_top_domains: z.boolean().default(true).describe(`indicates whether to exclude world’s largest websites
+      exclude_top_domains: z.boolean().default(true).describe(`indicates whether to exclude world's largest websites
         optional field
         default value: false
         set to true if you want to get highly-relevant competitors excluding the top websites`)  
