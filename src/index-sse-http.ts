@@ -145,6 +145,7 @@ const basicAuth = (req: Request, res: Response, next: NextFunction) => {
   const [username, password] = credentials.split(':');
 
   if (!username || !password) {
+    console.error('Invalid credentials');
     res.status(401).json({
       jsonrpc: "2.0",
       error: {
@@ -198,6 +199,7 @@ app.all('/mcp', basicAuth, async (req: Request, res: Response) => {
         transport = transportData.transport;
         transportData.lastActivity = Date.now();
       } else {
+        console.error('Session exists but uses a different transport protocol');
         res.status(400).json({
           jsonrpc: '2.0',
           error: {
@@ -246,6 +248,7 @@ app.all('/mcp', basicAuth, async (req: Request, res: Response) => {
       const server = getServer(req.username, req.password);
       await server.connect(transport);
     } else {
+      console.error('No valid session ID provided');
       res.status(400).json({
         jsonrpc: '2.0',
         error: {
@@ -286,6 +289,7 @@ app.get('/sse', basicAuth, async (req: Request, res: Response) => {
     const envPassword = process.env.DATAFORSEO_PASSWORD;
     
     if (!envUsername || !envPassword) {
+      console.error('No DataForSEO credentials provided');
       res.status(401).json({
         jsonrpc: "2.0",
         error: {

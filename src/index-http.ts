@@ -150,6 +150,7 @@ async function main() {
     const [username, password] = credentials.split(':');
 
     if (!username || !password) {
+      console.error('Invalid credentials');
       res.status(401).json({
         jsonrpc: "2.0",
         error: {
@@ -183,6 +184,7 @@ async function main() {
         const envPassword = process.env.DATAFORSEO_PASSWORD;
         
         if (!envUsername || !envPassword) {
+          console.error('No DataForSEO credentials provided');
           res.status(401).json({
             jsonrpc: "2.0",
             error: {
@@ -231,7 +233,7 @@ async function main() {
   });
 
   app.get('/mcp', async (req: Request, res: Response) => {
-    console.log('Received GET MCP request');
+    console.error('Received GET MCP request');
     res.status(405).json({
       jsonrpc: "2.0",
       error: {
@@ -243,7 +245,7 @@ async function main() {
   });
 
   app.delete('/mcp', async (req: Request, res: Response) => {
-    console.log('Received DELETE MCP request');
+    console.error('Received DELETE MCP request');
     res.status(405).json({
       jsonrpc: "2.0",
       error: {
