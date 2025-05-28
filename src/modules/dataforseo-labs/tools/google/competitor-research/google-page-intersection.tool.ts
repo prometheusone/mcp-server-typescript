@@ -38,6 +38,28 @@ search for the example.com page and all its related URLs which start with '/eng/
 note: a wilcard should be placed after the slash ('/') character in the end of the URL, it is not possible to place it after the domain in the following way:
 https://dataforseo.com*
 use https://dataforseo.com/* instead`),
+      exclude_pages: z.array(z.string()).optional().describe(`URLs of pages you want to exclude
+optional field
+you can set up to 10 pages in this array
+if you use this array, results will contain the keywords for which URLs from the pages object rank, but URLs from exclude_pages array do not;
+note that if you specify this field, the results will be based on the keywords any URL from pages ranks for regardless of intersections between them. However, you can set intersection_mode to intersect and results will contain the keywords all URLs from pages rank for in the same SERP and URLs from exclude_pages do not.
+use a wildcard (‘*’) character to specify the search pattern
+example:
+"exclude_pages": [
+"https://www.apple.com/iphone/*",
+"https://dataforseo.com/apis/*",
+"https://www.microsoft.com/en-us/industry/services/"
+]`),
+       intersection_mode: z.enum(['union', 'intersect']).optional().describe(`indicates whether to intersect keywords
+optional field
+use this field to intersect or merge results for the specified URLs
+possible values: union, intersect
+
+union – results are based on all keywords any URL from pages rank for;
+
+intersect – results are based on the keywords all URLs from pages rank for in the same SERP:
+
+by default, results are based on the intersect mode if you specify only pages array. If you specify exclude_pages as well, results are based on the union mode`),
       location_name: z.string().default("United States").describe(`full name of the location
 required field
 in format "Country"
@@ -71,8 +93,8 @@ United Kingdom`),
         merge operator must be a string and connect two other arrays, availible values: or, and.
         example:
         ["keyword_data.keyword_info.search_volume","in",[100,1000]]
-        [["first_domain_serp_element.etv",">",0],"and",["first_domain_serp_element.description","like","%goat%"]]
-        [["keyword_data.keyword_info.search_volume",">",100],"and",[["first_domain_serp_element.description","like","%goat%"],"or",["second_domain_serp_element.type","=","organic"]]]`
+        [["intersection_result.1.etv",">",0],"and",["intersection_result.2.description","like","%goat%"]]
+        [["keyword_data.keyword_info.search_volume",">",100],"and",[["intersection_result.1.description","like","%goat%"],"or",["intersection_result.2.type","=","organic"]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
@@ -104,7 +126,9 @@ United Kingdom`),
         filters: this.formatFilters(params.filters),
         order_by: this.formatOrderBy(params.order_by),
         exclude_top_domains: params.exclude_top_domains,
-        item_types: ['organic']
+        item_types: ['organic'],
+        exclude_pages: params.exclude_pages,
+        intersection_mode: params.intersection_mode
       }]);
       return this.validateAndFormatResponse(response);
     } catch (error) {

@@ -17,10 +17,13 @@ export class GoogleRankedKeywordsTool extends BaseTool {
 
   getParams(): z.ZodRawShape {
     return {
-      target: z.string().describe(`domain
+      target: z.string().describe(`domain name or page url
 required field
-the domain name of the target website
-the domain should be specified without https:// and www.`),
+the domain name of the target website or URL of the target webpage;
+the domain name must be specified without https:// or www.;
+the webpage URL must be specified with https:// or www.
+Note: if you specify the webpage URL without https:// or www., the result will be returned for the entire domain rather than the specific page
+`),
       location_name: z.string().default("United States").describe(`full name of the location
 required field
 in format "Country"

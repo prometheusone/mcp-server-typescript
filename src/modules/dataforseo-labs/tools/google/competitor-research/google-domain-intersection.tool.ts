@@ -71,7 +71,14 @@ United Kingdom`),
         you should use a comma to separate several sorting rules
         example:
         ["keyword_data.keyword_info.search_volume,desc","keyword_data.keyword_info.cpc,desc"]`
-      )
+      ),
+      intersections: z.boolean().optional().describe(`domain intersections in SERP
+optional field
+if you set intersections to true, you will get the keywords for which both target domains specified as target1 and target2 have results within the same SERP; the corresponding SERP elements for both domains will be provided in the results array
+Note: this endpoint will not provide results if the number of intersecting keywords exceeds 10 million
+if you specify intersections: false, you will get the keywords for which the domain specified as target1 has results in SERP, and the domain specified as target2 doesn’t;
+thus, the corresponding SERP elements and other data will be provided for the domain specified as target1only
+default value: true`).default(true)
     };
   }
 
@@ -86,7 +93,8 @@ United Kingdom`),
         filters: this.formatFilters(params.filters),
         order_by: this.formatOrderBy(params.order_by),
         exclude_top_domains: params.exclude_top_domains,
-        item_types: ['organic']
+        item_types: ['organic'],
+        intersections: params.intersections
       }]);
       return this.validateAndFormatResponse(response);
     } catch (error) {
