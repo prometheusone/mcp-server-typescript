@@ -8,7 +8,7 @@ export class GoogleBulkKeywordDifficultyTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_bulk_keyword_difficulty';
+    return 'dataforseo_labs_bulk_keyword_difficulty';
   }
 
   getDescription(): string {

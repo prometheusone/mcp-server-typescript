@@ -8,7 +8,7 @@ export class GoogleSearchIntentTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_search_intent';
+    return 'dataforseo_labs_search_intent';
   }
 
   getDescription(): string {

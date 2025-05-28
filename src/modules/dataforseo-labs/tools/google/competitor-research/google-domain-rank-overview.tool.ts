@@ -8,7 +8,7 @@ export class GoogleDomainRankOverviewTool extends BaseTool {
   }
 
   getName(): string {
-    return 'datalabs_google_domain_rank_overview';
+    return 'dataforseo_labs_google_domain_rank_overview';
   }
 
   getDescription(): string {
