@@ -56,20 +56,20 @@ United Kingdom`),
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules
-        optional field
-        you can use the same values as in the filters array to sort the results
-        possible sorting types:
-        asc – results will be sorted in the ascending order
-        desc – results will be sorted in the descending order
-        you should use a comma to set up a sorting type
-        example:
-        ["metrics.paid.etv,asc"]
-        Note: you can set no more than three sorting rules in a single request
-        you should use a comma to separate several sorting rules
-        example:
-        ["metrics.organic.etv,desc","metrics.paid.count,asc"]
-        default rule:
-        ["metrics.organic.count,desc"]`
+optional field
+you can use the same values as in the filters array to sort the results
+possible sorting types:
+asc – results will be sorted in the ascending order
+desc – results will be sorted in the descending order
+you should use a comma to specify a sorting type
+example:
+["metrics.paid.etv,asc"]
+Note: you can set no more than three sorting rules in a single request
+you should use a comma to separate several sorting rules
+example:
+["metrics.organic.etv,desc","metrics.paid.count,asc"]
+default rule:
+["metrics.organic.count,desc"]`
       ),
       item_types: z.array(z.string()).optional().describe(
         `item types to return

@@ -18,6 +18,7 @@ import { GoogleDomainIntersectionsTool } from './tools/google/competitor-researc
 import { GoogleHistoricalDomainRankOverviewTool } from './tools/google/competitor-research/google-historical-domain-rank-overview.tool.js';
 import { GooglePageIntersectionsTool } from './tools/google/competitor-research/google-page-intersection.tool.js';
 import { DataForSeoLabsFilterTool } from './tools/labs-filters.tool.js';
+import { GoogleBulkTrafficEstimationTool } from './tools/google/competitor-research/google-bulk-traffic-estimation.tool.js';
 
 export class DataForSEOLabsApi extends BaseModule {
   constructor(client: DataForSEOClient) {
@@ -43,6 +44,7 @@ export class DataForSEOLabsApi extends BaseModule {
       new GoogleDomainIntersectionsTool(this.dataForSEOClient),
       new GoogleHistoricalDomainRankOverviewTool(this.dataForSEOClient),
       new GooglePageIntersectionsTool(this.dataForSEOClient),
+      new GoogleBulkTrafficEstimationTool(this.dataForSEOClient),
       new DataForSeoLabsFilterTool(this.dataForSEOClient),
       // Add more tools here
     ];

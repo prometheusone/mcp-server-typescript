@@ -57,21 +57,21 @@ United Kingdom`),
 ["keyword_info.high_top_of_page_bid","<=",0.5]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
-        `results sorting rules
-        optional field
-        you can use the same values as in the filters array to sort the results
-        possible sorting types:
-        asc – results will be sorted in the ascending order
-        desc – results will be sorted in the descending order
-        you should use a comma to set up a sorting type
-        example:
-        ["keyword_data.keyword_info.competition,desc"]
-        default rule:
-        ["ranked_serp_element.serp_item.rank_group,asc"]
-        note that you can set no more than three sorting rules in a single request
-        you should use a comma to separate several sorting rules
-        example:
-        ["keyword_data.keyword_info.search_volume,desc","keyword_data.keyword_info.cpc,desc"]`
+        `resuresults sorting rules
+optional field
+you can use the same values as in the filters array to sort the results
+possible sorting types:
+asc – results will be sorted in the ascending order
+desc – results will be sorted in the descending order
+you should use a comma to set up a sorting type
+example:
+["keyword_info.competition,desc"]
+default rule:
+["keyword_info.search_volume,desc"]
+note that you can set no more than three sorting rules in a single request
+you should use a comma to separate several sorting rules
+example:
+["keyword_info.search_volume,desc","keyword_info.cpc,desc"]`
       )
     };
   }

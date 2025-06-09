@@ -5,6 +5,7 @@ import { BacklinksTool } from './tools/backlinks-backlinks.tool.js';
 import { BacklinksBulkBacklinksTool } from './tools/backlinks-bulk-backlinks.tool.js';
 import { BacklinksBulkNewLostBacklinksTool } from './tools/backlinks-bulk-new-lost-backlinks.tool.js';
 import { BacklinksBulkNewLostReferringDomainsTool } from './tools/backlinks-bulk-new-lost-referring-domains.tool.js';
+import { BacklinksBulkPagesSummaryTool } from './tools/backlinks-bulk-pages-summary.js';
 import { BacklinksBulkRanksTool } from './tools/backlinks-bulk-ranks.tool.js';
 import { BacklinksBulkReferringDomainsTool } from './tools/backlinks-bulk-referring-domains.tool.js';
 import { BacklinksBulkSpamScoreTool } from './tools/backlinks-bulk-spam-score.tool.js';
@@ -45,6 +46,7 @@ export class BacklinksApiModule extends BaseModule {
       new BacklinksSummaryTool(this.dataForSEOClient),
       new BacklinksTimeseriesNewLostSummaryTool(this.dataForSEOClient),
       new BacklinksTimeseriesSummaryTool(this.dataForSEOClient),
+      new BacklinksBulkPagesSummaryTool(this.dataForSEOClient),
       new BacklinksFiltersTool(this.dataForSEOClient)
       // Add more tools here
     ];

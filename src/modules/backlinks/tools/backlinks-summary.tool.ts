@@ -34,12 +34,7 @@ if set to false, internal links will be included in the results`).default(true)
     try {
       const response = await this.client.makeRequest('/v3/backlinks/summary/live', 'POST', [{
         target: params.target,
-        limit: params.limit,
-        offset: params.offset,
-        filters: this.formatFilters(params.filters),
-        order_by: this.formatOrderBy(params.order_by),
-        main_domain: params.main_domain,
-        exclude_large_domains: params.exclude_large_domains,
+        include_subdomains: params.include_subdomains,
         exclude_internal_backlinks: params.exclude_internal_backlinks
       }]);
       return this.validateAndFormatResponse(response);
