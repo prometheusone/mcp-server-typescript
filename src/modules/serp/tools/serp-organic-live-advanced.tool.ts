@@ -30,6 +30,15 @@ optional field
 number of results in SERP`),
       language_code: z.string().describe("search engine language code (e.g., 'en')"),
       keyword: z.string().describe("Search keyword"),
+      max_crawl_pages: z.number().min(1).max(7).optional().default(1).describe(`page crawl limit
+optional field
+number of search results pages to crawl
+max value: 100
+Note: the max_crawl_pages and depth parameters complement each other`),
+      device: z.string().default('desktop').optional().describe(`device type
+optional field
+can take the values:desktop, mobile
+default value: desktop`),
     };
   }
 
@@ -41,6 +50,8 @@ number of results in SERP`),
         language_code: params.language_code,
         keyword: params.keyword,
         depth: params.depth,
+        max_crawl_pages: params.max_crawl_pages,
+        device: params.device
       }]);
       return this.validateAndFormatResponse(response);
     } catch (error) {
