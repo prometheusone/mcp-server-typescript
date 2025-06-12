@@ -1,17 +1,25 @@
-FROM node:20-alpine
-
+# ─── Stage 1: Build with devDeps ────────────────────────────────────
+FROM node:20-alpine AS build
 WORKDIR /app
 
-# Install the DataForSEO MCP server from npm
-RUN npm install -g dataforseo-mcp-server
+# Install ALL deps (including typescript)
+COPY package.json package-lock.json* tsconfig.json ./
+RUN npm ci
 
-# Create a simple health check endpoint
-RUN echo '{"status":"healthy"}' > health.json
+# Bring in your source & compile it
+COPY src ./src
+RUN npm run build
 
-# Environment variables will be set by Coolify
-ENV PORT=3000
+# ─── Stage 2: Slim release image ──────────────────────────────────
+FROM node:20-alpine AS release
+WORKDIR /app
+
+# Copy only prod deps, but skip lifecycle scripts (so no prepare/build)
+COPY package.json package-lock.json* ./
+RUN npm ci --omit=dev --ignore-scripts
+
+# Pull in your compiled output from the build stage
+COPY --from=build /app/build ./build
 
 EXPOSE 3000
-
-# Run the server
-CMD ["dataforseo-mcp-server", "sse"]
+CMD ["node", "build/index.js"]
