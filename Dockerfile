@@ -2,24 +2,16 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY tsconfig.json ./
+# Install the DataForSEO MCP server from npm
+RUN npm install -g dataforseo-mcp-server
 
-# Install dependencies without running scripts first
-RUN npm install --ignore-scripts
+# Create a simple health check endpoint
+RUN echo '{"status":"healthy"}' > health.json
 
-# Copy all source files
-COPY . .
+# Environment variables will be set by Coolify
+ENV PORT=3000
 
-# Now try to build
-RUN npm run build || echo "Build attempted"
-
-# If there's no build folder, create it
-RUN mkdir -p build
-
-# Ensure the start:sse script exists, or fallback to a basic start
 EXPOSE 3000
 
-# Try multiple start commands
-CMD npm run start:sse || npm start || node build/index.js || node src/index.js
+# Run the server
+CMD ["dataforseo-mcp-server", "sse"]
