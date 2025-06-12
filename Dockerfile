@@ -21,5 +21,5 @@ RUN npm ci --omit=dev --ignore-scripts
 # Pull in your compiled output from the build stage
 COPY --from=build /app/build ./build
 
-EXPOSE 3000
+EXPOSE 3007
 CMD ["node", "build/index.js"]
