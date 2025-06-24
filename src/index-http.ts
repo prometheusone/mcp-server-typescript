@@ -32,27 +32,6 @@ function getServer(username: string | undefined, password: string | undefined) :
     name,
     version,
   },{ capabilities: { logging: {}} });
-   // Register a simple prompt
-   server.prompt(
-    'greeting-template',
-    'A simple greeting prompt template',
-    {
-      name: z.string().describe('Name to include in greeting'),
-    },
-    async ({ name }): Promise<any> => {
-      return {
-        messages: [
-          {
-            role: 'user',
-            content: {
-              type: 'text',
-              text: `Please greet ${name} in a friendly manner.`,
-            },
-          },
-        ],
-      };
-    }
-  );
   // Initialize DataForSEO client
   const dataForSEOConfig: DataForSEOConfig = {
     username: username || "",
@@ -88,21 +67,6 @@ function getServer(username: string | undefined, password: string | undefined) :
   }
   registerModuleTools();
   console.error('Tools registered');
-  server.resource(
-    'greeting-resource',
-    'https://example.com/greetings/default',
-    { mimeType: 'text/plain' },
-    async (): Promise<ReadResourceResult> => {
-      return {
-        contents: [
-          {
-            uri: 'https://example.com/greetings/default',
-            text: 'Hello, world!',
-          },
-        ],
-      };
-    }
-  );
   return server;
 }
 

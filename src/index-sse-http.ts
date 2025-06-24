@@ -302,8 +302,6 @@ app.get('/sse', basicAuth, async (req: Request, res: Response) => {
     delete transports[transport.sessionId];
   };
 
-  // Add multiple event listeners for different scenarios
-  res.on("close", cleanup);
   res.on("error", cleanup);
   req.on("error", cleanup);
   req.socket.on("error", cleanup);
