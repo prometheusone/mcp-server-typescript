@@ -120,6 +120,7 @@ The following modules are available to be enabled/disabled:
 - `BACKLINKS`: data on inbound links, referring domains and referring pages for any domain, subdomain, or webpage;
 - `BUSINESS_DATA`: based on business reviews and business information publicly shared on the following platforms: Google, Trustpilot, Tripadvisor;
 - `DOMAIN_ANALYTICS`: helps identify all possible technologies used for building websites and offers Whois data;
+- `CONTENT_ANALYSIS`: help you discover citations of the target keyword or brand and analyze the sentiments around it;
 
 ## Adding New Tools/Modules
 
@@ -133,6 +134,7 @@ Each module corresponds to a specific DataForSEO API:
 - `BACKLINKS`: module → [Backlinks API](https://docs.dataforseo.com/v3/backlinks/overview)
 - `BUSINESS_DATA`: module → [Business Data API](https://docs.dataforseo.com/v3/business_data/overview)
 - `DOMAIN_ANALYTICS`: module → [Domain Analytics API](https://docs.dataforseo.com/v3/domain_analytics/overview)
+- `CONTENT_ANALYSIS`: module → [Content Analysis API](https://docs.dataforseo.com/v3/content_analysis/overview)
 
 ### Implementation Options
 
@@ -249,6 +251,10 @@ export const AVAILABLE_MODULES = [
   'KEYWORDS_DATA',
   'ONPAGE',
   'DATAFORSEO_LABS',
+  'BACKLINKS',
+  'BUSINESS_DATA',
+  'DOMAIN_ANALYTICS',
+  'CONTENT_ANALYSIS',
   'YOUR_MODULE_NAME'  // Add your module name here
 ] as const;
 ```
