@@ -6,6 +6,9 @@ export class DataForSEOClient {
 
   constructor(config: DataForSEOConfig) {
     this.config = config;
+    if(defaultGlobalToolConfig.debug) {
+      console.error('DataForSEOClient initialized with config:', config);
+    }
     const token = btoa(`${config.username}:${config.password}`);
     this.authHeader = `Basic ${token}`;
   }

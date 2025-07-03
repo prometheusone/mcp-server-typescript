@@ -29,6 +29,7 @@ interface Request extends ExpressRequest {
 }
 
 console.error('Starting DataForSEO MCP Server...');
+console.error(`Server name: ${name}, version: ${version}`);
 
 function getServer(username: string | undefined, password: string | undefined) : McpServer
 {

@@ -12,7 +12,7 @@ import { name, version } from './utils/version.js';
 // Initialize field configuration if provided
 initializeFieldConfiguration();
 console.error('Starting DataForSEO MCP Server...');
-
+console.error(`Server name: ${name}, version: ${version}`);
 // Create server instance
 const server = new McpServer({
     name,

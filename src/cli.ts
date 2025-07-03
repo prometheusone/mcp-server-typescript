@@ -12,13 +12,16 @@ const args = process.argv.slice(2);
 const mode = args[0] || 'local';
 const configIndex = args.indexOf('--configuration');
 const configPath = configIndex !== -1 && configIndex + 1 < args.length ? args[configIndex + 1] : null;
-
+const debugLog = args.includes('--debug') || args.includes('-d');
 // Set environment variable for configuration path if provided
 if (configPath) {
     process.env.FIELD_CONFIG_PATH = configPath;
-    console.log(`Using field configuration: ${configPath}`);
+    console.error(`Using field configuration: ${configPath}`);
 }
-
+if( debugLog) {
+    console.error('Debug mode enabled');
+    process.env.DEBUG = 'true';
+}
 // Prepare arguments to pass to the spawned process (excluding --configuration args)
 const argsWithoutMode = args.slice(1);
 const childArgs = argsWithoutMode.filter((_, index) => {

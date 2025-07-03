@@ -15,6 +15,8 @@ import { initializeFieldConfiguration } from './config/field-configuration.js';
 
 // Initialize field configuration if provided
 initializeFieldConfiguration();
+console.error('Starting DataForSEO MCP Server...');
+console.error(`Server name: ${name}, version: ${version}`);
 
 /**
  * This example server demonstrates backwards compatibility with both:
