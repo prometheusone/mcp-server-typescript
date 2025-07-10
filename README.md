@@ -233,7 +233,7 @@ You can either:
 Here's how to add a new tool to any new or pre-existing module:
 
 ```typescript
-// src/modules/your-module/tools/your-tool.tool.ts
+// src/code/modules/your-module/tools/your-tool.tool.ts
 import { BaseTool } from '../../base.tool';
 import { DataForSEOClient } from '../../../client/dataforseo.client';
 import { z } from 'zod';
@@ -305,14 +305,14 @@ export class YourTool extends BaseTool {
 
 ### Creating a New Module
 
-1. Create a new directory under `src/modules/` for your module:
+1. Create a new directory under `src/core/modules/` for your module:
 ```bash
-mkdir -p src/modules/your-module-name
+mkdir -p src/core/modules/your-module-name
 ```
 
 2. Create module files:
 ```typescript
-// src/modules/your-module-name/your-module-name.module.ts
+// src/core/modules/your-module-name/your-module-name.module.ts
 import { BaseModule } from '../base.module';
 import { DataForSEOClient } from '../../client/dataforseo.client';
 import { YourTool } from './tools/your-tool.tool';
@@ -330,7 +330,7 @@ export class YourModuleNameModule extends BaseModule {
 }
 ```
 
-3. Register your module in `src/config/modules.config.ts`:
+3. Register your module in `src/core/config/modules.config.ts`:
 ```typescript
 export const AVAILABLE_MODULES = [
   'SERP',
@@ -345,7 +345,7 @@ export const AVAILABLE_MODULES = [
 ] as const;
 ```
 
-4. Initialize your module in `src/index.ts`:
+4. Initialize your module in `src/main/index.ts`:
 ```typescript
 if (isModuleEnabled('YOUR_MODULE_NAME', enabledModules)) {
   modules.push(new YourModuleNameModule(dataForSEOClient));
