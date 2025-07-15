@@ -1,13 +1,17 @@
 # DataForSEO MCP Server
 
-Model Context Protocol (MCP) server implementation for DataForSEO, enabling Claude to interact with selected DataForSEO APIs and obtain SEO data through a standardized interface. 
+Model Context Protocol (MCP) server implementation for DataForSEO, enabling AI assistants to interact with selected DataForSEO APIs and obtain SEO data through a standardized interface. 
 
 ## Features
 
-- SERP API: real-time Search Engine Results Page (SERP) data for Google, Bing, and Yahoo;
-- KEYWORDS_DATA API: keyword research and clickstream data, including search volume, cost-per-click, and other metrics;   
-- ONPAGE API: allows crawling websites and webpages according to customizable parameters to obtain on-page SEO performance metrics; 
-- DATAFORSEO_LABS API: data on keywords, SERPs, and domains based on DataForSEO's in-house databases and proprietary algorithms.
+- **SERP API**: real-time Search Engine Results Page (SERP) data for Google, Bing, and Yahoo;
+- **KEYWORDS_DATA API**: keyword research and clickstream data, including search volume, cost-per-click, and other metrics;   
+- **ONPAGE API**: allows crawling websites and webpages according to customizable parameters to obtain on-page SEO performance metrics; 
+- **DATAFORSEO LABS API**: data on keywords, SERPs, and domains based on DataForSEO's in-house databases and proprietary algorithms;
+- **BACKLINKS API**: comprehensive backlink analysis including referring domains, anchor text distribution, and link quality metrics;
+- **BUSINESS DATA API**: publicly available data on any business entity;
+- **DOMAIN ANALYTICS API**: data on website traffic, technologies, and Whois details;
+- **CONTENT ANALYSIS API**: robust source of data for brand monitoring, sentiment analysis, and citation management;
 
 ## Prerequisites
 
