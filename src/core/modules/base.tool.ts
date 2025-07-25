@@ -48,16 +48,15 @@ export abstract class BaseTool {
   }
 
   protected getFilterExpression() : z.ZodType<any> {
-        const filterValue = z.union([z.string(), z.number(), z.boolean(), z.array(z.union([z.string(), z.number()]))])
-        const simpleFilter = z.tuple([z.string(), z.string(), filterValue]);
+        const filterValue = z.union([z.string(), z.number(), z.boolean(), z.array(z.any())])
         const logicalOperator = z.enum(["and", "or"]);
         const binaryOperator = z.enum(['regex', 'not_regex', '<', '<=', '>', '>=', '=', '<>', 'in', 'not_in', 'ilike', 'not_ilike', 'like', 'not_like']);
+        const simpleFilter = z.tuple([z.string(), binaryOperator, filterValue]);
         
         const filterExpression: z.ZodType<any> = z.lazy(() => 
           z.union([
             simpleFilter,
-            z.array(z.union([filterExpression, logicalOperator])),
-            logicalOperator
+            z.array(z.union([filterExpression, logicalOperator])).max(7)
           ])
         );
 
@@ -153,6 +152,15 @@ export abstract class BaseTool {
       return null;
     if(filters.length === 0){
       return null;
+    }
+    return this.removeNested(filters);
+  }
+
+  private removeNested(filters: any[]) : any[] {
+    for(var i = 0; i < filters.length; i++){
+      if(Array.isArray(filters[i]) && filters[i].length == 1 && Array.isArray(filters[i][0])){
+        filters[i] = this.removeNested(filters[i][0]);
+      }
     }
     return filters;
   }

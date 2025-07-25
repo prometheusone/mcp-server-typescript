@@ -24,7 +24,7 @@ optional field
 default value: 0
 if you specify the 10 value, the first ten entities in the results array will be omitted and the data will be provided for the successive entities`
       ),
-      filters: z.array(this.getFilterExpression()).max(8).optional().describe(
+      filters: this.getFilterExpression().optional().describe(
         `array of results filtering parameters
 optional field
 you can add several filters at once (8 filters maximum)

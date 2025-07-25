@@ -34,7 +34,7 @@ United Kingdom`),
         default value: 0
         if you specify the 10 value, the first ten keywords in the results array will be omitted and the data will be provided for the successive keywords`
       ),
-      filters: z.array(this.getFilterExpression()).max(8).optional().describe(
+      filters: this.getFilterExpression().optional().describe(
         `you can add several filters at once (8 filters maximum)
         you should set a logical operator and, or between the conditions
         the following operators are supported:

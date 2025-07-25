@@ -36,7 +36,7 @@ export class ContentAnalysisPhraseTrendsTool extends BaseTool {
         }`
       ),
       page_type: z.array(z.enum(['ecommerce','news','blogs', 'message-boards','organization'])).optional().describe(`target page types`),
-      initial_dataset_filters: z.array(this.getFilterExpression()).max(8).optional().describe(
+      initial_dataset_filters: this.getFilterExpression().optional().describe(
         `initial dataset filtering parameters
         initial filtering parameters that apply to fields in the Search endpoint;
         you can add several filters at once (8 filters maximum);
