@@ -49,15 +49,17 @@ United Kingdom`),
         regex, not_regex, <, <=, >, >=, =, <>, in, not_in, match, not_match, ilike, not_ilike, like, not_like
         you can use the % operator with like and not_like, as well as ilike and not_ilike to match any string of zero or more characters
         merge operator must be a string and connect two other arrays, availible values: or, and.
-        example:
-      ["keyword_info.search_volume",">",0]
+example:
+["keyword_data.keyword_info.search_volume",">",0]
 [["keyword_info.search_volume","in",[0,1000]],
 "and",
-["keyword_info.competition_level","=","LOW"]][["keyword_info.search_volume",">",100],
+["keyword_data.keyword_info.competition_level","=","LOW"]]
+
+[["keyword_data.keyword_info.search_volume",">",100],
 "and",
-[["keyword_info.cpc","<",0.5],
+[["keyword_data.keyword_info.cpc","<",0.5],
 "or",
-["keyword_info.high_top_of_page_bid","<=",0.5]]]`
+["keyword_data.keyword_info.high_top_of_page_bid","<=",0.5]]]`
       ),
       order_by: z.array(z.string()).optional().describe(
         `results sorting rules

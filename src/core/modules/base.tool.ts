@@ -47,25 +47,23 @@ export abstract class BaseTool {
     return error instanceof Error ? error.message : 'Unknown error';
   }
 
-  protected getFilterExpression() : z.ZodType<any> {
-        const filterValue = z.union([z.string(), z.number(), z.boolean(), z.array(z.any())])
-        const logicalOperator = z.enum(["and", "or"]);
-        const binaryOperator = z.enum(['regex', 'not_regex', '<', '<=', '>', '>=', '=', '<>', 'in', 'not_in', 'ilike', 'not_ilike', 'like', 'not_like']);
-        const simpleFilter = z.tuple([z.string(), binaryOperator, filterValue]);
-        
-        const filterExpression: z.ZodType<any> = z.lazy(() => 
-          z.union([
-            simpleFilter,
-            z.array(z.union([filterExpression, logicalOperator])).max(7)
-          ])
-        );
-
-        return filterExpression;
+  protected getFilterExpression(): z.ZodType<any> {
+    const filterExpression = 
+    z.array(
+        z.union([
+          z.array(z.union([z.string(), z.number(), z.boolean()])).length(3),
+          z.enum(["and", "or"]),
+          z.array(z.unknown()).length(3),
+          z.union([z.string(), z.number(),z.unknown()]),
+          z.any()  
+        ])
+      ).max(3);
+    return filterExpression;
   }
 
-  protected validateAndFormatResponse (response: any): { content: Array<{ type: string; text: string }> } {
+  protected validateAndFormatResponse(response: any): { content: Array<{ type: string; text: string }> } {
     console.error(JSON.stringify(response));
-    if(defaultGlobalToolConfig.fullResponse || this.supportOnlyFullResponse()){
+    if (defaultGlobalToolConfig.fullResponse || this.supportOnlyFullResponse()) {
       let data = response as DataForSEOFullResponse;
       this.validateResponseFull(data);
       let result = data.tasks[0].result;
@@ -117,7 +115,7 @@ export abstract class BaseTool {
     if (response.status_code / 100 !== 200) {
       throw new Error(`API Error: ${response.status_message} (Code: ${response.status_code})`);
     }
-    
+
     if (response.tasks.length === 0) {
       throw new Error('No tasks in response');
     }
@@ -146,30 +144,28 @@ export abstract class BaseTool {
     return filterFields(response, fieldPaths);
   }
 
-  protected formatFilters(filters: any[]): any
-  {
-    if(!filters)
+  protected formatFilters(filters: any[]): any {
+    if (!filters)
       return null;
-    if(filters.length === 0){
+    if (filters.length === 0) {
       return null;
     }
     return this.removeNested(filters);
   }
 
-  private removeNested(filters: any[]) : any[] {
-    for(var i = 0; i < filters.length; i++){
-      if(Array.isArray(filters[i]) && filters[i].length == 1 && Array.isArray(filters[i][0])){
+  private removeNested(filters: any[]): any[] {
+    for (var i = 0; i < filters.length; i++) {
+      if (Array.isArray(filters[i]) && filters[i].length == 1 && Array.isArray(filters[i][0])) {
         filters[i] = this.removeNested(filters[i][0]);
       }
     }
     return filters;
   }
 
-  protected formatOrderBy(orderBy: any[]): any
-  {
-    if(!orderBy)
+  protected formatOrderBy(orderBy: any[]): any {
+    if (!orderBy)
       return null;
-    if(orderBy.length === 0){
+    if (orderBy.length === 0) {
       return null;
     }
     return orderBy;
