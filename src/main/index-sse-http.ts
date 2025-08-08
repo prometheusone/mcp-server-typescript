@@ -111,34 +111,54 @@ function getServer(username: string | undefined, password: string | undefined): 
 const app = express();
 app.use(express.json());
 
-// Basic Auth Middleware
-const basicAuth = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Basic ')) {
-    next();
-    return;
-  }
+// Simple in-memory store for active SSE transports
+const sseTransports: Record<string, SSEServerTransport> = {};
 
-  const base64Credentials = authHeader.split(' ')[1];
-  const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
-  const [username, password] = credentials.split(':');
+// Environment variables for DataForSEO credentials
+const DATAFORSEO_USERNAME = process.env.DATAFORSEO_USERNAME;
+const DATAFORSEO_PASSWORD = process.env.DATAFORSEO_PASSWORD;
 
-  if (!username || !password) {
-    console.error('Invalid credentials');
-    res.status(401).json({
-      jsonrpc: "2.0",
-      error: {
-        code: -32001,
-        message: "Invalid credentials"
-      },
-      id: null
-    });
-    return;
-  }
+// Basic Authentication Middleware
+const basicAuth = (req: Request, res: Response, next: NextFunction): void => {
+    try { 
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            const [type, credentialsB64] = authHeader.split(' ');
+            if (type === 'Basic' && credentialsB64) {
+                try {
+                    const decoded = Buffer.from(credentialsB64, 'base64').toString();
+                    const [username, password] = decoded.split(':');
+                    if (username === DATAFORSEO_USERNAME && password === DATAFORSEO_PASSWORD) {
+                        req.username = username; // Attach user to request for logging or other purposes
+                        req.password = password;
+                        return next();
+                    }
+                } catch (decodeError) {
+                    console.error(`[Auth] Error decoding credentials for IP: ${req.socket.remoteAddress || 'unknown'}. Error:`, decodeError);
+                    // Fall through to unauthorized response if DATAFORSEO_USERNAME is set
+                }
+            }
+        }
 
-  req.username = username;
-  req.password = password;
-  next();
+        if (DATAFORSEO_USERNAME) { // Only enforce auth if username is configured
+             console.log(`[Auth] Unauthorized attempt. IP: ${req.socket.remoteAddress || 'unknown'}. Auth Header: ${authHeader ? 'Present' : 'Missing or Malformed'}`);
+            res.setHeader('WWW-Authenticate', 'Basic realm="Restricted Area"');
+            res.status(401).send('Authentication required.');
+            return;
+        }
+        
+        // If DATAFORSEO_USERNAME is not set (e.g. for local dev without auth), allow access
+        req.username = 'anonymous_fallback_auth_disabled'; 
+        return next();
+
+    } catch (authMiddlewareError) { 
+        console.error(`[Auth] CRITICAL ERROR in basicAuth middleware for IP: ${req.socket.remoteAddress || 'unknown'}. Error:`, authMiddlewareError);
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error during auth.');
+        } else if (res.socket && !res.socket.destroyed) {
+            res.end(); // If headers sent and socket valid, just try to close the connection
+        }
+    }
 };
 
 //=============================================================================
@@ -232,57 +252,93 @@ app.delete('/mcp', handleNotAllowed('DELETE MCP'));
 //=============================================================================
 
 app.get('/sse', basicAuth, async (req: Request, res: Response) => {
-  console.log('Received GET request to /sse (deprecated SSE transport)');
+    let keepAliveInterval: NodeJS.Timeout | null = null;
+    const clientIp = req.ip || req.socket.remoteAddress || 'unknown_ip';
+    let sessionId: string | null = null; // To hold session ID for logging in error cases
 
-  // Handle credentials
-  if (!req.username && !req.password) {
-    const envUsername = process.env.DATAFORSEO_USERNAME;
-    const envPassword = process.env.DATAFORSEO_PASSWORD;
-    
-    if (!envUsername || !envPassword) {
-      console.error('No DataForSEO credentials provided');
-      res.status(401).json({
-        jsonrpc: "2.0",
-        error: {
-          code: -32001,
-          message: "Authentication required. Provide DataForSEO credentials."
-        },
-        id: null
-      });
-      return;
-    }
-    req.username = envUsername;
-    req.password = envPassword;
-  }
-
-  const transport = new SSEServerTransport('/messages', res);
-  
-  // Store transport with timestamp
-  transports[transport.sessionId] = {
-    transport,
-    lastActivity: Date.now()
-  };
-
-  // Handle connection cleanup
-  const cleanup = () => {
     try {
-      transport.close();
-    } catch (error) {
-      console.error(`Error closing transport for session ${transport.sessionId}:`, error);
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache, no-transform');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no'); // Advise proxies not to buffer
+
+        const userForLog = req.username || 'anonymous_pre_transport';
+        console.log(`[SSE /sse] New connection attempt. IP: ${clientIp}, User: ${userForLog}`);
+
+        sessionId = randomUUID(); // Generate a unique session ID
+        const transport = new SSEServerTransport('/', res);
+        sseTransports[sessionId] = transport;
+        
+        // Store transport with timestamp
+        transports[sessionId] = {
+            transport: transport,
+            lastActivity: Date.now()
+        };
+
+        // Connect server to transport
+        const server = getServer(req.username, req.password);
+        await server.connect(transport);
+
+        console.log(`[SSE /sse] Connection established. Session ID: ${sessionId}, IP: ${clientIp}, User: ${userForLog}`);
+
+        keepAliveInterval = setInterval(() => {
+            // Check if transport still exists for this session and socket is writable
+            if (sseTransports[sessionId!] && res.socket && !res.socket.destroyed) { 
+                console.log(`[SSE /sse] Sending keep-alive ping. Session ID: ${sessionId}`);
+                res.write(':ping\n\n'); // SSE comment to keep connection alive
+            } else {
+                if (keepAliveInterval) {
+                    clearInterval(keepAliveInterval);
+                    console.log(`[SSE /sse] Cleared keep-alive: transport missing or socket destroyed. Session ID: ${sessionId}`);
+                }
+            }
+        }, 25000); // Send a ping every 25 seconds
+
+        req.on('close', () => {
+            console.log(`[SSE /sse] Connection closed by client. Session ID: ${sessionId}, IP: ${clientIp}, User: ${userForLog}`);
+            if (keepAliveInterval) {
+                clearInterval(keepAliveInterval);
+                console.log(`[SSE /sse] Cleared keep-alive on req close. Session ID: ${sessionId}`);
+            }
+            if (sessionId && sseTransports[sessionId]) {
+                try {
+                    delete sseTransports[sessionId];
+                    console.log(`[SSE /sse] Transport removed for Session ID: ${sessionId}. Active: ${Object.keys(sseTransports).length}`);
+                } catch (cleanupError) {
+                    console.error(`[SSE /sse] Error during transport deletion for Session ID ${sessionId}:`, cleanupError);
+                }
+            }
+        });
+        
+        res.on('error', (err) => {
+            console.error(`[SSE /sse] Response stream error. Session ID ${sessionId}, IP: ${clientIp}, User: ${userForLog}. Error:`, err);
+            if (keepAliveInterval) {
+                clearInterval(keepAliveInterval);
+                console.log(`[SSE /sse] Cleared keep-alive on res error. Session ID: ${sessionId}`);
+            }
+            if (sessionId && sseTransports[sessionId]) {
+                 try {
+                    delete sseTransports[sessionId];
+                } catch (e) { console.error(`[SSE /sse] Error deleting transport on res error for Session ID ${sessionId}:`, e); }
+            }
+        });
+
+        console.log(`[SSE /sse] Sending initial 'endpoint' event. Session ID: ${sessionId}`);
+        res.write(`event: endpoint\ndata: /messages?sessionId=${sessionId}\n\n`);
+        console.log(`[SSE /sse] Initial 'endpoint' event sent. Session ID: ${sessionId}`);
+
+    } catch (error)  {
+        const userForLogError = req.username || 'anonymous_pre_transport_error';
+        console.error(`[SSE /sse] CRITICAL ERROR in /sse handler. Session ID: ${sessionId || 'N/A'}, IP: ${clientIp}, User: ${userForLogError}. Error:`, error);
+        if (keepAliveInterval) {
+            clearInterval(keepAliveInterval);
+        }
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error in SSE handler.');
+        } else if (res.socket && !res.socket.destroyed) { 
+            res.end(); 
+        }
     }
-    delete transports[transport.sessionId];
-  };
-
-  res.on("error", cleanup);
-  req.on("error", cleanup);
-  req.socket.on("error", cleanup);
-  req.socket.on("timeout", cleanup);
-
-  // Set socket timeout
-  req.socket.setTimeout(CONNECTION_TIMEOUT);
-
-  const server = getServer(req.username, req.password);
-  await server.connect(transport);
 });
 
 app.post("/messages", basicAuth, async (req: Request, res: Response) => {
