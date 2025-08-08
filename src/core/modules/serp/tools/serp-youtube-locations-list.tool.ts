@@ -17,10 +17,6 @@ export class SerpYoutubeLocationsListTool extends BaseTool {
     return 'Utility tool to get list of available locations for: serp_youtube_organic_live_advanced, serp_youtube_video_info_live_advanced, serp_youtube_video_comments_live_advanced, serp_youtube_video_subtitles_live_advanced.';
   }
 
-  protected supportOnlyFullResponse(): boolean {
-    return true;
-  }
-
   getParams(): z.ZodRawShape {
     return {
       country_iso_code: z.string().describe("ISO 3166-1 alpha-2 country code, for example: US, GB, MT"),
@@ -39,14 +35,13 @@ export class SerpYoutubeLocationsListTool extends BaseTool {
       if (params.location_type) {
         payload['location_type'] = params.location_type;
       }
-      
+
       if (params.location_name) {
         payload['location_name'] = params.location_name;
       }
 
-      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/youtube/locations`, 'POST', [payload]) as DataForSEOResponse;
-      this.validateResponse(response);
-      return this.formatResponse(response.items.map(x => x.location_name));
+      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/youtube/locations`, 'POST', [payload]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }

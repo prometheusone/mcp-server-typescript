@@ -15,11 +15,7 @@ export class SerpOrganicLocationsListTool extends BaseTool {
   getDescription(): string {
     return 'Utility tool for serp_organic_live_advanced to get list of availible locations.';
   }
-
-  protected supportOnlyFullResponse(): boolean {
-    return true;
-  }
-
+  
   getParams(): z.ZodRawShape {
     return {
       search_engine: z.string().default('google').describe("search engine name, one of: google, yahoo, bing."),
@@ -44,9 +40,8 @@ export class SerpOrganicLocationsListTool extends BaseTool {
         payload['location_name'] = params.location_name;
       }
 
-      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/${params.search_engine}/locations`, 'POST', [payload]) as DataForSEOResponse;
-      this.validateResponse(response);
-      return this.formatResponse(response.items.map(x => x.location_name));
+      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/${params.search_engine}/locations`, 'POST', [payload]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }
