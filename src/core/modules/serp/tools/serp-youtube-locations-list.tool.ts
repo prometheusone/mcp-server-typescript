@@ -14,25 +14,34 @@ export class SerpYoutubeLocationsListTool extends BaseTool {
   }
 
   getDescription(): string {
-    return 'Utility tool to get list of available locations for: serp_youtube_organic_live_advanced, serp_youtube_video_info_live_advanced, serp_youtube_video_comments_live_advanced, serp_youtube_video_subtitles_live_advanced';
-  }
-
-  protected supportOnlyFullResponse(): boolean {
-    return true;
+    return 'Utility tool to get list of available locations for: serp_youtube_organic_live_advanced, serp_youtube_video_info_live_advanced, serp_youtube_video_comments_live_advanced, serp_youtube_video_subtitles_live_advanced.';
   }
 
   getParams(): z.ZodRawShape {
     return {
-      country_code: z.string().default('US').describe("country code (e.g., 'US')"),
+      country_iso_code: z.string().describe("ISO 3166-1 alpha-2 country code, for example: US, GB, MT"),
+      location_type: z.string().optional().describe("Type of location. Possible variants: 'TV Region','Postal Code','Neighborhood','Governorate','National Park','Quarter','Canton','Airport','Okrug','Prefecture','City','Country','Province','Barrio','Sub-District','Congressional District','Municipality District','district','DMA Region','Union Territory','Territory','Colloquial Area','Autonomous Community','Borough','County','State','District','City Region','Commune','Region','Department','Division','Sub-Ward','Municipality','University'"),
+      location_name: z.string().optional().describe("Name of location or it`s part.")
     };
   }
 
   async handle(params:any): Promise<any> {
     try {
-      console.error(JSON.stringify(params, null, 2));
-      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/youtube/locations/${params.country_code}`, 'GET', null, true) as DataForSEOFullResponse;
-      this.validateResponseFull(response);
-      return this.formatResponse(response.tasks[0].result.map(x => x.location_name));
+
+     const payload: Record<string, unknown> = {
+        'country_iso_code': params.country_iso_code,
+      };
+
+      if (params.location_type) {
+        payload['location_type'] = params.location_type;
+      }
+
+      if (params.location_name) {
+        payload['location_name'] = params.location_name;
+      }
+
+      const response = await this.dataForSEOClient.makeRequest(`/v3/serp/youtube/locations`, 'POST', [payload]);
+      return this.validateAndFormatResponse(response);
     } catch (error) {
       return this.formatErrorResponse(error);
     }
